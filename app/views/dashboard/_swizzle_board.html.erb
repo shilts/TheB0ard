@@ -1,4 +1,18 @@
-<div class='swizzle-board'>
+<div id='autoscroll' class='swizzle-board'>
 	<ul class='swizzle-list'>
+		<% @swizzleHTTPHashArray.each do |swizzle| %>
+			<li class='swizzle-status'>
+				<a href=<%=swizzle[:link]%>>
+					<div class='swizzle-title'>
+						<h1><%= swizzle[:title] %></h1>
+					</div>
+					<div class='swizzle-data'>
+					<% swizzle[:data].each do | line | %>
+						<p><%= line %></p>
+					<% end %>
+					</div>
+				</a>
+			</li>
+		<% end %>
 	</ul>
 </div>

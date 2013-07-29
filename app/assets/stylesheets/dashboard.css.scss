@@ -52,6 +52,7 @@
 /* Reset code end */
 
 $toggleTime: 200ms;
+$swizzleHighliightColor: #25ff00;
 
 .button{
 	position: relative;
@@ -63,17 +64,41 @@ $toggleTime: 200ms;
 	text-align: center;
 
 	p {
-		padding-top: 10px;
+		position: relative;
+		padding-top: 20px;
+		left: inherit;
 	}
 
 	&.side-menu-toggle {
 		position: absolute;
 		width: 0px;
+		height: 100%;
 		-webkit-transition: left $toggleTime ;
 		transition: left $toggleTime ;
 		border: 3px solid #000;
+		border-top: none;
+		border-bottom: none;
+		border-radius: 0;
+		background: -webkit-linear-gradient(right, #FFF, gray 80%);
 		left: -5px;
+		cursor: pointer;
 	}
+
+	&.side-button {
+		width: 70%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10px;
+	}
+}
+
+::-webkit-scrollbar {
+	display: none;
+}
+
+#autoscroll {
+	-webkit-marquee: auto small infinite slide fast;
+	overflow-x: -webkit-marquee;
 }
 
 html {
@@ -84,15 +109,15 @@ html {
 body {
 	width: inherit;
 	height: inherit;
-	font-family: 'Audiowide', cursive;
-	overflow: scroll;
+	font-family: Consolas, monaco, monospace;
+	overflow: hidden;
 
 	.app-page {
 		position: relative;
 		width: inherit;
 		height: inherit;
 		background: lightblue url('sky_background.png') repeat;
-		overflow: hidden;
+		//background: -webkit-radial-gradient(white, blue);
 
 		.side-wrapper{
 			position: relative;
@@ -107,11 +132,35 @@ body {
 			z-index: 10;
 
 			.side-board {
-				width: 99%;
+				width: 90%;
 				height: 100%;
 				height: inherit;
 				border-right: 3px solid #000;
-				background: #333 url('side_menu_background.png') repeat;
+				background: #000 url('black_lozenge/black_lozenge_@2X.png') repeat;
+				-webkit-transition: width $toggleTime;
+				transition: width $toggleTime;
+
+				.app-logo {
+					width: 90%;
+					height: 200px;
+					margin-top: 10px;
+					margin-left: auto;
+					margin-right: auto;
+					background: #000;
+					background-size: 225px;
+					border: 3px solid #000;
+					border-radius: 10px;
+					text-align: center;
+					color: black;
+				}
+
+				.options-list {
+					margin-top: 15px;
+					position: relative;
+					left: -100%;
+					-webkit-transition: left $toggleTime;
+					transition: left $toggleTime;
+				}
 			}
 		}
 
@@ -126,14 +175,66 @@ body {
 			z-index: 5;
 
 			.swizzle-board {
-				height: 40%;
+				height: auto;
 				width: 100%;
+				overflow-y: hidden;
+				overflow-x: scroll;
+
+				.swizzle-list {
+					position: relative;
+					height: 100%;
+					width: auto;
+					margin: 0;
+					margin-top: 10px;
+					margin-bottom: 10px;
+					list-style-type: none;
+
+					.swizzle-status {
+						position: relative;
+						display: inline-block;
+						width: 460px;
+						height: 100%;
+						margin-left: 30px;
+						background: #000; //-webkit-linear-gradient(top, #FFF, #000 60%);
+						border: 5px solid #000;
+						vertical-align: top;
+						text-align: center;
+						color: white;
+						word-wrap: break-word;
+						box-shadow: 20px 15px 40px #000;
+
+						a {
+							text-decoration: none;
+							color: inherit;
+
+							.swizzle-title {
+								position: relative;
+								padding-top: 5px;
+								font-size: 30px;
+								color: $swizzleHighliightColor;
+								border: 2px solid $swizzleHighliightColor;
+
+							}
+
+							.swizzle-data {
+								margin-top: 5 px;
+
+								p {
+									font-size: 30px;
+									padding: 10px;
+									border-top: 3px double $swizzleHighliightColor;
+								}
+							}
+						}
+					}
+				}
 			}
 
 			.panel-board {
+				position: relative;
 				width: 100%;
-				height: 60%;
-				background: #000 url('black_lozenge/black_lozenge_@2X.png') repeat;
+				height: 100%;
+				background: #333 url('side_menu_background.png') repeat;
 				border-top: 3px solid #000;
 			}
 		}
