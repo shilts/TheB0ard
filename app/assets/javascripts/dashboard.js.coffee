@@ -99,3 +99,25 @@ $ =>
     sideMenuToggle $main, $side, $menu, $menuList, $(event.target),
       mainWidthMenuOpen, mainWidthMenuClosed, sideOpenWidth,
         sideClosedWidth, toggleButtonDistance
+
+  # #--zclip callback functions for copying to clipboard--#
+  # $("a#copy-description").zclip
+  #   path: "js/ZeroClipboard.swf"
+  #   copy: $("p#description").text()
+
+  # $("a#copy-dynamic").zclip
+  #   path: "js/ZeroClipboard.swf"
+  #   copy: ->
+  #     $("input#dynamic").val()
+
+  # $("a#copy-callbacks").zclip
+  #   path: "js/ZeroClipboard.swf"
+  #   copy: $("#callback-paragraph").text()
+  #   beforeCopy: ->
+  #     $("#callback-paragraph").css "background", "yellow"
+  #     $(this).css "color", "orange"
+  #   afterCopy: ->
+  #     $("#callback-paragraph").css "background", "green"
+  #     $(this).css "color", "purple"
+  #     $(this).next(".check").show()
+  # #--See more at: http://www.steamdev.com/zclip/#sthash.1zplgbAj.dpuf--#

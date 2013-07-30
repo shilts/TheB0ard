@@ -26,22 +26,35 @@ class DashboardController < ApplicationController
 		]
 
 		toBeConvertedHashArray = [
-			{:original => 'release revision: ', :new => 'Last commit: '},
-			{:original => 'release timestamp: ', :new  => 'Commit timestamp: '}
+			{:original => 'release revision: ', :new => 'Last Commit: '},
+			{:original => 'release timestamp: ', :new  => 'Commit Timestamp: '}
 		]
 
 		@swizzleHTTPHashArray = []
 
 		swizzleHashArray.each { |swizzle|
 			data = []
+			branch = 'unknown'
 			open(swizzle[:url]) { | response |
 				response.each_line {| line |
-					if !(line.strip.empty? or line.include? "application:")
-						formatHTML(line, toBeRemovedArray, toBeConvertedHashArray)
-						if line.length != 0
-							line.capitalize!
-							data.push line
+					if !(line.strip.empty? or line.include? "application:" or line.include? "branch:")
+						if (line.include? 'deployed by:')
+							formatHTML(line, toBeRemovedArray, toBeConvertedHashArray)
+							if line.length == 0
+								line = "TripCase Deployer"
+								data.push line
+							else
+								data.push line.titleize
+							end
+						else
+							formatHTML(line, toBeRemovedArray, toBeConvertedHashArray)
+							if line.length != 0
+								data.push line
+							end
 						end
+					elsif line.include? "branch: "
+						formatHTML(line, toBeRemovedArray, toBeConvertedHashArray)
+						branch = line
 					elsif !(line.strip.empty?)
 						if line.include? 'tripcase-rails'
 							swizzle[:title] += ':Rails'
@@ -52,23 +65,29 @@ class DashboardController < ApplicationController
 						end
 					end
 				}
-				data.first.downcase!
 			}
-			@swizzleHTTPHashArray.push({:title => swizzle[:title], :data => data, :link => swizzle[:link]})
+			@swizzleHTTPHashArray.push({:title => swizzle[:title], :branch => branch, :data => data, :link => swizzle[:link]})
 		}
 	end
 
 	def formatHTML (line, removeArray, convertArray)
-		removeArray.each do |item|
-			line.slice! item
-		end
-		convertArray.each do |convert|
-			if line.include? convert[:original]
-				line[convert[:original]] = convert[:new]
+		if line.include? 'deployed by:'
+			removeArray.each do |item|
+				line.slice! item
 			end
+			line.strip!
+		else
+			removeArray.each do |item|
+				line.slice! item
+			end
+			convertArray.each do |convert|
+				if line.include? convert[:original]
+					line[convert[:original]] = convert[:new]
+				end
+			end
+			line.strip!
+			line.split(' ').each{|w| w.capitalize}.join(' ')
 		end
-
-		line.strip!
 
 		return line
 	end

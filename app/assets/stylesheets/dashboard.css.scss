@@ -52,7 +52,6 @@
 /* Reset code end */
 
 $toggleTime: 200ms;
-$swizzleHighliightColor: #25ff00;
 
 .button{
 	position: relative;
@@ -92,6 +91,20 @@ $swizzleHighliightColor: #25ff00;
 	}
 }
 
+@font-face {
+	font-family: 'Digital Dream';
+	src: font-url('DIGITALDREAMFATSKEW.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Pro-Font Windows';
+	src: font-url('ProFontWindows.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+
 ::-webkit-scrollbar {
 	display: none;
 }
@@ -109,7 +122,6 @@ html {
 body {
 	width: inherit;
 	height: inherit;
-	font-family: Consolas, monaco, monospace;
 	overflow: hidden;
 
 	.app-page {
@@ -152,6 +164,9 @@ body {
 					border-radius: 10px;
 					text-align: center;
 					color: black;
+					//left: -100%;
+					-webkit-transition: left $toggleTime;
+					transition: left $toggleTime;
 				}
 
 				.options-list {
@@ -199,9 +214,12 @@ body {
 						border: 5px solid #000;
 						vertical-align: top;
 						text-align: center;
-						color: white;
+						color: yellow;
 						word-wrap: break-word;
 						box-shadow: 20px 15px 40px #000;
+						border-radius: 5px;
+						font-family: 'Pro-font Windows', 'sans-serif';
+						font-size: 23pt;
 
 						a {
 							text-decoration: none;
@@ -209,20 +227,65 @@ body {
 
 							.swizzle-title {
 								position: relative;
+								width: 100%;
 								padding-top: 5px;
-								font-size: 30px;
-								color: $swizzleHighliightColor;
-								border: 2px solid $swizzleHighliightColor;
+								font-size: 30pt;
+								color: #000;
+								background: yellow;
+								border-radius: 2px;
+							 	box-shadow: #000 0px 15px 20px;
+							}
+						}
 
+						.swizzle-data {
+							margin-top: 7px;
+
+							p {
+								padding: 10px;
+
+								&:nth-child(odd) {
+									background: #383830 url('black_lozenge/black_lozenge_@2X.png') repeat;
+								}
+
+								&:hover {
+									cursor: pointer;
+									text-shadow: #FFF 1px 1px 30px;
+								}
 							}
 
-							.swizzle-data {
-								margin-top: 5 px;
+							// #copy-description {
+							// 	display: block;
 
-								p {
-									font-size: 30px;
+							// 	&:hover {
+							// 		cursor: pointer;
+							// 		text-shadow: #FFF 1px 1px 30px;
+							// 	}
+
+							// 	&:nth(odd) {
+							// 		background: #383830;
+							// 	}
+
+							// 	#description {
+							// 		padding: 10px;
+							// 	}
+							// }
+
+							.swizzle-branch {
+								width: 98%;
+								height : auto;
+								margin-left: auto;
+								margin-right: auto;
+								background: #383838;
+								border-radius: 5px;
+								margin-bottom: 10px;
+								border: 3px double yellow;
+								box-shadow: yellow 0px 1px 15px;
+
+								h1 {
+									color: #FFF;
 									padding: 10px;
-									border-top: 3px double $swizzleHighliightColor;
+									font-size: 28pt;
+									text-shadow: #000 0px 7px 7px;
 								}
 							}
 						}
@@ -234,7 +297,7 @@ body {
 				position: relative;
 				width: 100%;
 				height: 100%;
-				background: #333 url('side_menu_background.png') repeat;
+				background: #333 url('panel_board_background.png') repeat;
 				border-top: 3px solid #000;
 			}
 		}

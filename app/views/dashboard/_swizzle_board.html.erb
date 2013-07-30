@@ -6,12 +6,15 @@
 					<div class='swizzle-title'>
 						<h1><%= swizzle[:title] %></h1>
 					</div>
-					<div class='swizzle-data'>
-					<% swizzle[:data].each do | line | %>
-						<p><%= line %></p>
-					<% end %>
-					</div>
 				</a>
+				<div class='swizzle-data'>
+				<% swizzle[:data].each do | line | %>
+					<!--<a id='copy-description'>--><p id='description'><%= line %></p><!-- </a> -->
+				<% end %>
+					<div class='swizzle-branch'>
+						<h1><%= swizzle[:branch] %></h1>
+					</div>
+				</div>
 			</li>
 		<% end %>
 	</ul>
