@@ -66,6 +66,8 @@ $closedMenuWidth: 30px;
 	text-align: center;
 	box-shadow: #000 10px 10px 10px;
 	cursor: pointer;
+	-webkit-transform-origin: 50% 50%;
+	transform-origin: 50% 50%;
 
 	&:hover {
 		background: -webkit-linear-gradient(top, darken(#FFF, 50%), #000 80%);
@@ -80,13 +82,6 @@ $closedMenuWidth: 30px;
 		top: 20%;
 		font-size: 20pt;
 		text-shadow: #000 0px -2px 0px;
-	}
-
-	&.rotated {
-		-webkit-transform-origin: 50% 50%;
-		-webkit-transform: rotate(20deg);
-		transform-origin: 50% 50%;
-		transform: rotate(20deg);
 	}
 
 	&.side-menu-toggle {
@@ -192,6 +187,16 @@ body {
 					color: black;
 					border: 2px double #FFF;
 					box-shadow: #000 10px 10px 10px;
+					-webkit-transition: -webkit-transform 100ms;
+					transition: -webkit-transform 100ms;
+
+					&:hover {
+						background: red;
+						-webkit-transform-origin: 50% 50%;
+						-webkit-transform: rotate(10deg);
+						transform-origin: 50% 50%;
+						transform: rotate(10deg);
+					}
 				}
 
 				.options-list {

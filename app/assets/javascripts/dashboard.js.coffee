@@ -61,22 +61,13 @@ $ =>
     infiniteSwizzleScrolling $swizzleBoard, $swizzles,
       startScroll, parseInt(swizzleStatusWidth, 10), extraSwizzleWidth
 
-  $('.swizzle-list').hover (
+  $('.swizzle-list').hover(
     ->
       $swizzleBoard.removeAttr 'id'
     ->
       currScroll = $swizzleBoard.scrollLeft()
       $swizzleBoard.attr 'id', 'autoscroll'
-      $swizzleBoard.scrollLeft(currScroll)
-  )
-
-  $('.button.side-button').hover (
-    ->
-      $(this).addClass 'rotated'
-      console.log 'rotating...'
-    ->
-      $(this).removeClass 'rotated'
-      console.log 'un-rotating...'
+      $swizzleBoard.scrollLeft currScroll
   )
 
   $('.side-menu-toggle').click ->
