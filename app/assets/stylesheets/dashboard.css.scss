@@ -53,6 +53,8 @@
 
 $toggleTime: 200ms;
 $swizzleHighliightColor: #25ff00;
+$openMenuWidth: 300px;
+$closedMenuWidth: 30px;
 
 .button{
 	position: relative;
@@ -62,33 +64,65 @@ $swizzleHighliightColor: #25ff00;
 	border-radius: 5px;
 	background: -webkit-linear-gradient(top, #FFF, #000 80%);
 	text-align: center;
+	box-shadow: #000 10px 10px 10px;
+	cursor: pointer;
+
+	&:hover {
+		background: -webkit-linear-gradient(top, darken(#FFF, 50%), #000 80%);
+
+		p {
+			text-shadow: #000 0px -3px 0px;
+		}
+	}
 
 	p {
 		position: relative;
-		padding-top: 20px;
-		left: inherit;
+		top: 20%;
+		font-size: 20pt;
+		text-shadow: #000 0px -2px 0px;
+	}
+
+	&.rotated {
+		-webkit-transform-origin: 50% 50%;
+		-webkit-transform: rotate(20deg);
+		transform-origin: 50% 50%;
+		transform: rotate(20deg);
 	}
 
 	&.side-menu-toggle {
-		position: absolute;
-		width: 0px;
+		display: inline-block;
+		position: relative;
+		width: $closedMenuWidth - 4px;
 		height: 100%;
-		-webkit-transition: left $toggleTime ;
-		transition: left $toggleTime ;
-		border: 3px solid #000;
+		cursor: pointer;
+		border: 2px solid #000;
 		border-top: none;
 		border-bottom: none;
 		border-radius: 0;
-		background: -webkit-linear-gradient(right, #FFF, gray 80%);
-		left: -5px;
-		cursor: pointer;
+		background: -webkit-linear-gradient(right, #FFF, #383838 80%);
+		box-shadow: #000 -5px 0px 10px;
+		-webkit-transition: left $toggleTime;
+		transition: left $toggleTime;
+		left: $closedMenuWidth;
+		margin-top: -15px;
+		float: right;
+
+		.toggle-button-decoration {
+			display: inline-block;
+			position: relative;
+			width: 20%;
+			height: 90%;
+			margin-top:150%;
+			box-shadow: #000 0px 0px 10px;
+			border-radius: 10px;
+		}
 	}
 
 	&.side-button {
 		width: 70%;
 		margin-left: auto;
 		margin-right: auto;
-		margin-top: 10px;
+		margin-top: 20px;
 	}
 }
 
@@ -109,41 +143,45 @@ html {
 body {
 	width: inherit;
 	height: inherit;
-	font-family: Consolas, monaco, monospace;
 	overflow: hidden;
+	font-family: 'Arial', 'Helvetica', 'sans-serif';
 
 	.app-page {
 		position: relative;
 		width: inherit;
 		height: inherit;
-		background: lightblue url('sky_background.png') repeat;
-		//background: -webkit-radial-gradient(white, blue);
+		background: lightblue url('swizzle_board_background.png') repeat;
 
 		.side-wrapper{
-			position: relative;
-			width: 0px;
+			position: absolute;
+			left: 0px;
+			width: $openMenuWidth;
 			height: inherit;
 			float: left;
 			color: white;
 			text-align: center;
 			background-color: #333;
-			-webkit-transition: width $toggleTime;
-			transition: width $toggleTime;
+			background: #000 url('black_lozenge/black_lozenge_@2X.png') repeat;
 			z-index: 10;
+			-webkit-transition: left $toggleTime;
+			transition: left $toggleTime;
+
+				&.menu-closed {
+					left: -($openMenuWidth - $closedMenuWidth);
+				}
 
 			.side-board {
+				position: relative;
 				width: 90%;
 				height: 100%;
-				height: inherit;
+				margin: 0px;
 				border-right: 3px solid #000;
-				background: #000 url('black_lozenge/black_lozenge_@2X.png') repeat;
-				-webkit-transition: width $toggleTime;
-				transition: width $toggleTime;
 
 				.app-logo {
-					width: 90%;
-					height: 200px;
-					margin-top: 10px;
+					position: relative;
+					width: 80%;
+					height: 20%;
+					margin-top: 15px;
 					margin-left: auto;
 					margin-right: auto;
 					background: #000;
@@ -152,12 +190,13 @@ body {
 					border-radius: 10px;
 					text-align: center;
 					color: black;
+					border: 2px double #FFF;
+					box-shadow: #000 10px 10px 10px;
 				}
 
 				.options-list {
-					margin-top: 15px;
 					position: relative;
-					left: -100%;
+					margin-top: 25px;
 					-webkit-transition: left $toggleTime;
 					transition: left $toggleTime;
 				}
@@ -170,9 +209,10 @@ body {
 			float: left;
 			width: 100%;
 			height: inherit;
+			z-index: 5;
+			float: right;
 			-webkit-transition: width $toggleTime;
 			transition: width $toggleTime;
-			z-index: 5;
 
 			.swizzle-board {
 				height: auto;
@@ -195,7 +235,7 @@ body {
 						width: 460px;
 						height: 100%;
 						margin-left: 30px;
-						background: #000; //-webkit-linear-gradient(top, #FFF, #000 60%);
+						background: -webkit-linear-gradient(bottom, #FFF, #000 60%);
 						border: 5px solid #000;
 						vertical-align: top;
 						text-align: center;
@@ -234,7 +274,7 @@ body {
 				position: relative;
 				width: 100%;
 				height: 100%;
-				background: #333 url('side_menu_background.png') repeat;
+				background: #333 url('panel_board_background.png') repeat;
 				border-top: 3px solid #000;
 			}
 		}

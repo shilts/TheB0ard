@@ -3,28 +3,13 @@
 #You can use CoffeeScript in this file:
   #http://jashkenas.github.com/coffee-script/
 
-#animation controller for opening and closing the side menu
-sideMenuToggle = ($main, $side, $menu, $menuList, $target, mainOpenWidth,
-                  mainClosedWidth, sideOpenWidth, sideClosedWidth, distance) ->
-  if $side.css('width') is sideClosedWidth + 'px'
-    $side.width(sideOpenWidth)
-    $main.width(mainOpenWidth)
-    $menu.css 'width' : '90%'
-    $menuList.css 'left' : '0px'
-    $target.css 'left' : distance + 'px'
-  else
-    $side.width(sideClosedWidth)
-    $main.width(mainClosedWidth)
-    $menu.width(0)
-    $menuList.css 'left' : '-100%'
-    $target.css 'left' : '-3px'
-
 #Allows for dynamic resizing with the view window
 resetMainWidth = ($main, $side, openWidth, closedWidth) ->
-  if $side.css('width') is closedWidth + 'px'
-    $main.width($(window).width() - closedWidth)
+  winWidth = $(window).width()
+  if $side.hasClass 'menu-closed'
+    $main.width(winWidth - closedWidth)
   else
-    $main.width($(window).width() - openWidth)
+    $main.width(winWidth - openWidth)
 
 #Ensures all swizzles are displayed in a horizontal list
 recalculateSwizzleWidth = ($swizzles, extra) ->
@@ -56,24 +41,14 @@ $ =>
   $toggle = $('.side-menu-toggle')
   $swizzleBoard = $('.swizzle-board')
   $swizzles = $('.swizzle-status')
-  windowWidth = $(window).width()
   swizzleStatusWidth = $('.swizzle-status').outerWidth()
   sideOpenWidth = 300
-  sideClosedWidth = 25
-  mainWidthMenuOpen = windowWidth - sideOpenWidth
-  mainWidthMenuClosed = windowWidth - sideClosedWidth
-  toggleButtonDistance = sideOpenWidth - (sideClosedWidth + 6)
+  sideClosedWidth = 30
+  toggleTime = 200
   extraSwizzleWidth = 15
   startScroll = 20
 
-  $side.css
-    width : sideClosedWidth + 'px'
-    'min-width' : sideClosedWidth + 'px'
-  $toggle.css
-    left: '-3px'
-    width: sideClosedWidth + 'px'
-  $main.css
-    width: mainWidthMenuClosed
+  $main.css 'width' : ($(window).width() - sideClosedWidth) + 'px'
 
   recalculateSwizzleWidth $swizzles, extraSwizzleWidth
   $swizzleBoard.scrollLeft(startScroll)
@@ -86,16 +61,31 @@ $ =>
     infiniteSwizzleScrolling $swizzleBoard, $swizzles,
       startScroll, parseInt(swizzleStatusWidth, 10), extraSwizzleWidth
 
-  $('.swizzle-list').hover(
+  $('.swizzle-list').hover (
     ->
-      $swizzleBoard.removeAttr('id')
+      $swizzleBoard.removeAttr 'id'
     ->
-      currScroll = $swizzleBoard.scrollLeft();
-      $swizzleBoard.attr('id', 'autoscroll')
+      currScroll = $swizzleBoard.scrollLeft()
+      $swizzleBoard.attr 'id', 'autoscroll'
       $swizzleBoard.scrollLeft(currScroll)
   )
 
-  $('.side-menu-toggle').click (event) ->
-    sideMenuToggle $main, $side, $menu, $menuList, $(event.target),
-      mainWidthMenuOpen, mainWidthMenuClosed, sideOpenWidth,
-        sideClosedWidth, toggleButtonDistance
+  $('.button.side-button').hover (
+    ->
+      $(this).addClass 'rotated'
+      console.log 'rotating...'
+    ->
+      $(this).removeClass 'rotated'
+      console.log 'un-rotating...'
+  )
+
+  $('.side-menu-toggle').click ->
+    winWidth = $(window).width()
+    if $side.hasClass 'menu-closed'
+      $side.removeClass 'menu-closed'
+      $main.css
+        width: (winWidth - sideOpenWidth) + 'px'
+    else
+      $side.addClass 'menu-closed'
+      $main.css
+        width: (winWidth - sideClosedWidth) + 'px'
