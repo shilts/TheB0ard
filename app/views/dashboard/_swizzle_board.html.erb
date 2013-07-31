@@ -1,18 +1,29 @@
 <div id='autoscroll' class='swizzle-board'>
 	<ul class='swizzle-list'>
-		<% @swizzleHTTPHashArray.each do |swizzle| %>
+		<% @swizzleHTMLHashArray.each do |swizzleData| %>
 			<li class='swizzle-status'>
-				<a href=<%=swizzle[:link]%>>
-					<div class='swizzle-title'>
-						<h1><%= swizzle[:title] %></h1>
+				<a href=<%=swizzleData[:link]%>>
+					<div class='title'>
+						<h1><%= swizzleData[:title] %></h1>
 					</div>
 				</a>
 				<div class='swizzle-data'>
-				<% swizzle[:data].each do | line | %>
-					<!--<a id='copy-description'>--><p id='description'><%= line %></p><!-- </a> -->
-				<% end %>
-					<div class='swizzle-branch'>
-						<h1><%= swizzle[:branch] %></h1>
+					<div class='deployed-time'>
+						<p><%= swizzleData[:date] %></p>
+					</div>
+					<div class='deployer'>
+						<p><%= swizzleData[:deployer] %></p>
+					</div>
+					<div class='commit-code'>
+						<h1>-Last Commit-</h1>
+						<p><%= swizzleData[:commitCode] %></p>
+					</div>
+<!-- 					<div class='commit-time'>
+						<h1>-Commit Timestamp-</h1>
+						<p><%= swizzleData[:lastCommitTime] %></p>
+					</div> -->
+					<div class='branch'>
+						<h1><%= swizzleData[:branch] %></h1>
 					</div>
 				</div>
 			</li>

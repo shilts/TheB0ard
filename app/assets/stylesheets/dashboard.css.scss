@@ -60,6 +60,7 @@ $toggleTime: 200ms;
 	border: 3px solid #000;
 	border-radius: 5px;
 	background: -webkit-linear-gradient(top, #FFF, #000 80%);
+	background: linear-gradient(top, #FFF, #000 80%);
 	text-align: center;
 
 	p {
@@ -79,6 +80,7 @@ $toggleTime: 200ms;
 		border-bottom: none;
 		border-radius: 0;
 		background: -webkit-linear-gradient(right, #FFF, gray 80%);
+		background: linear-gradient(right, #FFF, gray 80%);
 		left: -5px;
 		cursor: pointer;
 	}
@@ -128,8 +130,9 @@ body {
 		position: relative;
 		width: inherit;
 		height: inherit;
-		background: lightblue url('sky_background.png') repeat;
-		//background: -webkit-radial-gradient(white, blue);
+		background: -webkit-radial-gradient(white, blue);
+		background: radial-gradient(white, blue);
+		background: lightblue url('main_background.png') repeat;
 
 		.side-wrapper{
 			position: relative;
@@ -225,7 +228,7 @@ body {
 							text-decoration: none;
 							color: inherit;
 
-							.swizzle-title {
+							.title {
 								position: relative;
 								width: 100%;
 								padding-top: 5px;
@@ -240,12 +243,13 @@ body {
 						.swizzle-data {
 							margin-top: 7px;
 
+							h1 {
+								padding-top: 10px;
+								margin-bottom: -5px;
+							}
+
 							p {
 								padding: 10px;
-
-								&:nth-child(odd) {
-									background: #383830 url('black_lozenge/black_lozenge_@2X.png') repeat;
-								}
 
 								&:hover {
 									cursor: pointer;
@@ -253,24 +257,15 @@ body {
 								}
 							}
 
-							// #copy-description {
-							// 	display: block;
+							.deployed-time {
+								background: #383830 url('black_lozenge/black_lozenge_@2X.png') repeat;
+							}
 
-							// 	&:hover {
-							// 		cursor: pointer;
-							// 		text-shadow: #FFF 1px 1px 30px;
-							// 	}
+							.commit-code {
+								background: #383830 url('black_lozenge/black_lozenge_@2X.png') repeat;
+							}
 
-							// 	&:nth(odd) {
-							// 		background: #383830;
-							// 	}
-
-							// 	#description {
-							// 		padding: 10px;
-							// 	}
-							// }
-
-							.swizzle-branch {
+							.branch {
 								width: 98%;
 								height : auto;
 								margin-left: auto;

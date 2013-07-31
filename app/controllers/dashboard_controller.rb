@@ -1,10 +1,11 @@
 require 'open-uri'
 require 'timeout'
+require 'date'
 
 class DashboardController < ApplicationController
 
 	def main
-		swizzleHashArray = [
+		swizzleURLHashArray = [
 			{:title => 'S2', :url => 'http://swizzle2.tripcase.com/status', :link => 'http://swizzle2.tripcase.com/login'},
 			{:title => 'S2', :url => 'http://swizzle2.tripcase.com/touch2/status', :link => 'http://swizzle2.tripcase.com/tdot'},
 			{:title => 'S3', :url => 'http://ctovm2417.dev.sabre.com/status', :link => 'http://ctovm2417.dev.sabre.com/login'},
@@ -16,79 +17,75 @@ class DashboardController < ApplicationController
 			# {:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com', :link => ''}
 		]
 
-		toBeRemovedArray = [
-			'<p>',
-			'</p>',
-			'branch:',
-			'date:',
-			'deployed:',
-			'deployed by:'
-		]
+		#hash contents: {:title, :branch, :date, :deployer, :commitCode, :lastCommitTime, :link}
+		@swizzleHTMLHashArray = []
 
-		toBeConvertedHashArray = [
-			{:original => 'release revision: ', :new => 'Last Commit: '},
-			{:original => 'release timestamp: ', :new  => 'Commit Timestamp: '}
-		]
-
-		@swizzleHTTPHashArray = []
-
-		swizzleHashArray.each { |swizzle|
-			data = []
-			branch = 'unknown'
+		swizzleURLHashArray.each { |swizzle|
+			swizzleHash = {}
 			open(swizzle[:url]) { | response |
 				response.each_line {| line |
-					if !(line.strip.empty? or line.include? "application:" or line.include? "branch:")
-						if (line.include? 'deployed by:')
-							formatHTML(line, toBeRemovedArray, toBeConvertedHashArray)
-							if line.length == 0
-								line = "TripCase Deployer"
-								data.push line
-							else
-								data.push line.titleize
-							end
-						else
-							formatHTML(line, toBeRemovedArray, toBeConvertedHashArray)
-							if line.length != 0
-								data.push line
-							end
-						end
-					elsif line.include? "branch: "
-						formatHTML(line, toBeRemovedArray, toBeConvertedHashArray)
-						branch = line
-					elsif !(line.strip.empty?)
-						if line.include? 'tripcase-rails'
-							swizzle[:title] += ':Rails'
-						elsif line.include? 'tripcase-touch2'
-							swizzle[:title] += ':Touch2'
-						else
-							swizzle[:title] += ':Unknown'
-						end
+					if !(line.strip.empty?)
+						formatHTMLIntoHash(swizzle, line, swizzleHash)
 					end
 				}
 			}
-			@swizzleHTTPHashArray.push({:title => swizzle[:title], :branch => branch, :data => data, :link => swizzle[:link]})
+			swizzleHash.merge! :link => swizzle[:link]
+			@swizzleHTMLHashArray.push(swizzleHash)
 		}
 	end
 
-	def formatHTML (line, removeArray, convertArray)
-		if line.include? 'deployed by:'
-			removeArray.each do |item|
-				line.slice! item
+	def formatHTMLIntoHash (swizzle, line, hash)
+		line.slice! '<p>'
+		line.slice! '</p>'
+		if line.include? 'application:' #done
+			if line.include? 'tripcase-rails'
+				line = (swizzle[:title] += ':Rails')
+			elsif line.include? 'tripcase-touch2'
+				line = (swizzle[:title] += ':Touch2')
+			else
+				line = (swizzle[:title] += ':Unknown')
 			end
+			hash.merge! :title => line
+		elsif line.include? 'branch:' #done
+			line.slice! 'branch:'
 			line.strip!
-		else
-			removeArray.each do |item|
-				line.slice! item
-			end
-			convertArray.each do |convert|
-				if line.include? convert[:original]
-					line[convert[:original]] = convert[:new]
-				end
-			end
+			hash.merge! :branch => line
+		elsif line.include? 'deployed:' #done
+			line.slice! 'deployed:'
 			line.strip!
-			line.split(' ').each{|w| w.capitalize}.join(' ')
+			hash.merge! :date => line #done
+		elsif line.include? 'deployed by:'
+			line.slice! 'deployed by:'
+			line.strip!
+			line.capitalize!
+			if line.length == 0
+				line = "TripCase Deployer"
+			end
+			hash.merge! :deployer => line
+		elsif line.include? 'release revision:'
+			line.slice! 'release revision:'
+			line.strip!
+			hash.merge! :commitCode => line
+		elsif line.include? 'release timestamp:' #done
+			line.slice! 'release timestamp:'
+			line.strip!
+			date = convertTimestampToDateFormat(line)
+			hash.merge! :lastCommitTime => date
 		end
-
-		return line
 	end
+end
+
+def convertTimestampToDateFormat (timeStamp)
+	year = timeStamp[0...4]
+	month = timeStamp[5...6]
+	day = timeStamp[6...8]
+	hour = ((timeStamp[8...10]).to_i - 5).to_s
+	minute = timeStamp[10...12]
+	second = timeStamp[12...14]
+
+	month = Date::ABBR_MONTHNAMES[month.to_i]
+
+	newTimeStamp = (month + " " + day + ", " + year + " @ " + hour + ":" + minute + ":" + second + " CDT")
+
+	return newTimeStamp
 end
