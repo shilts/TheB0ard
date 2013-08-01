@@ -53,46 +53,6 @@
 
 $toggleTime: 200ms;
 
-.button{
-	position: relative;
-	width: 100px;
-	height: 50px;
-	border: 3px solid #000;
-	border-radius: 5px;
-	background: -webkit-linear-gradient(top, #FFF, #000 80%);
-	background: linear-gradient(top, #FFF, #000 80%);
-	text-align: center;
-
-	p {
-		position: relative;
-		padding-top: 20px;
-		left: inherit;
-	}
-
-	&.side-menu-toggle {
-		position: absolute;
-		width: 0px;
-		height: 100%;
-		-webkit-transition: left $toggleTime ;
-		transition: left $toggleTime ;
-		border: 3px solid #000;
-		border-top: none;
-		border-bottom: none;
-		border-radius: 0;
-		background: -webkit-linear-gradient(right, #FFF, gray 80%);
-		background: linear-gradient(right, #FFF, gray 80%);
-		left: -5px;
-		cursor: pointer;
-	}
-
-	&.side-button {
-		width: 70%;
-		margin-left: auto;
-		margin-right: auto;
-		margin-top: 10px;
-	}
-}
-
 @font-face {
 	font-family: 'Digital Dream';
 	src: font-url('DIGITALDREAMFATSKEW.ttf');
@@ -105,6 +65,61 @@ $toggleTime: 200ms;
 	src: font-url('ProFontWindows.ttf');
 	font-weight: normal;
 	font-style: normal;
+}
+
+.button{
+	position: relative;
+	width: 100px;
+	height: 50px;
+	border: 3px solid #000;
+	border-radius: 5px;
+	background: -webkit-linear-gradient(top, #FFF, #000 80%);
+	background: linear-gradient(top, #FFF, #000 80%);
+	text-align: center;
+	cursor: pointer;
+	font-family: 'Digital Dream', 'sans serif'
+
+	p {
+		position: relative;
+		padding-top: 20px;
+		left: inherit;
+	}
+
+	&.side-board-toggle {
+		position: absolute;
+		width: 0px;
+		height: 100%;
+		-webkit-transition: left $toggleTime ;
+		transition: left $toggleTime ;
+		border: 3px solid #000;
+		border-top: none;
+		border-bottom: none;
+		border-radius: 0;
+		background: -webkit-linear-gradient(right, #FFF, gray 80%);
+		background: linear-gradient(right, #FFF, gray 80%);
+		left: -5px;
+	}
+
+	&.side-button {
+		width: 70%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10px;
+	}
+
+	&.display-mode-toggle {
+		width: 100%;
+		height: 5%;
+		margin-top: -3px;
+		background: -webkit-linear-gradient(top, #FFF, #383838 90%);
+		border-radius: 0;
+		box-shadow: #000 0px 7px 15px;
+
+		p {
+			padding-top: 15px;
+			text-shadow: #000 5px 4px 5px;
+		}
+	}
 }
 
 ::-webkit-scrollbar {
@@ -167,7 +182,6 @@ body {
 					border-radius: 10px;
 					text-align: center;
 					color: black;
-					//left: -100%;
 					-webkit-transition: left $toggleTime;
 					transition: left $toggleTime;
 				}
@@ -197,6 +211,12 @@ body {
 				width: 100%;
 				overflow-y: hidden;
 				overflow-x: scroll;
+				-webkit-transition: height $toggleTime;
+				transition: height $toggleTime;
+
+				&.display-mode {
+					height: 95%;
+				}
 
 				.swizzle-list {
 					position: relative;
@@ -213,7 +233,7 @@ body {
 						width: 460px;
 						height: 100%;
 						margin-left: 30px;
-						background: #000; //-webkit-linear-gradient(top, #FFF, #000 60%);
+						background: #383830 url('black_lozenge/black_lozenge_@2X.png') repeat;
 						border: 5px solid #000;
 						vertical-align: top;
 						text-align: center;
@@ -242,6 +262,7 @@ body {
 
 						.swizzle-data {
 							margin-top: 7px;
+							width: 100%;
 
 							h1 {
 								padding-top: 10px;
@@ -250,6 +271,27 @@ body {
 
 							p {
 								padding: 10px;
+								width: inherit;
+								height: auto;
+							}
+
+							.deployer {
+								width: inherit;
+								height: 70px;
+								background: #000;
+								text-shadow: yellow 0px 0px 10px;
+
+								p {
+									width: 94%;
+									padding-top: 20px;
+									padding-right: 10px;
+									text-overflow: ellipsis;
+									white-space: nowrap;
+									overflow: hidden;
+								}
+							}
+
+							.commit-code p {
 
 								&:hover {
 									cursor: pointer;
@@ -257,20 +299,12 @@ body {
 								}
 							}
 
-							.deployed-time {
-								background: #383830 url('black_lozenge/black_lozenge_@2X.png') repeat;
-							}
-
-							.commit-code {
-								background: #383830 url('black_lozenge/black_lozenge_@2X.png') repeat;
-							}
-
 							.branch {
-								width: 98%;
+								width: 97%;
 								height : auto;
 								margin-left: auto;
 								margin-right: auto;
-								background: #383838;
+								background: #000;
 								border-radius: 5px;
 								margin-bottom: 10px;
 								border: 3px double yellow;
@@ -280,7 +314,7 @@ body {
 									color: #FFF;
 									padding: 10px;
 									font-size: 28pt;
-									text-shadow: #000 0px 7px 7px;
+									text-shadow: #FFF 0px 0px 10px;
 								}
 							}
 						}
@@ -294,6 +328,10 @@ body {
 				height: 100%;
 				background: #333 url('panel_board_background.png') repeat;
 				border-top: 3px solid #000;
+				bottom: 0px;
+				-webkit-transition: bottom $toggleTime;
+				transition: bottom $toggleTime;
+				bottom: 0px;
 			}
 		}
 

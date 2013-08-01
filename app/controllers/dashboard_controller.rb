@@ -57,11 +57,15 @@ class DashboardController < ApplicationController
 		elsif line.include? 'deployed by:'
 			line.slice! 'deployed by:'
 			line.strip!
-			line.capitalize!
+			if line.split.length == 1
+				line.capitalize!
+			else
+				line.split.each{|i| i.capitalize!}.join(' ')
+			end
 			if line.length == 0
 				line = "TripCase Deployer"
 			end
-			hash.merge! :deployer => line
+			hash.merge! :deployer => line #done
 		elsif line.include? 'release revision:'
 			line.slice! 'release revision:'
 			line.strip!
