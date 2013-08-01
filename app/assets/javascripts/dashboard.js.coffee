@@ -3,28 +3,13 @@
 #You can use CoffeeScript in this file:
   #http://jashkenas.github.com/coffee-script/
 
-#animation controller for opening and closing the side sideBoard
-sideMenuToggle = ($main, $side, $sideBoard, $sideBoardList, $target, mainOpenWidth,
-                  mainClosedWidth, sideOpenWidth, sideClosedWidth, distance) ->
-  if $side.css('width') is sideClosedWidth + 'px'
-    $side.width(sideOpenWidth)
-    $main.width(mainOpenWidth)
-    $sideBoard.css 'width' : '90%'
-    $sideBoardList.css 'left' : '0px'
-    $target.css 'left' : distance + 'px'
-  else
-    $side.width(sideClosedWidth)
-    $main.width(mainClosedWidth)
-    $sideBoard.width(0)
-    $sideBoardList.css 'left' : '-100%'
-    $target.css 'left' : '-3px'
-
 #Allows for dynamic resizing with the view window
 resetMainWidth = ($main, $side, openWidth, closedWidth) ->
-  if $side.css('width') is closedWidth + 'px'
-    $main.width($(window).width() - closedWidth)
+  winWidth = $(window).width()
+  if $side.hasClass 'menu-closed'
+    $main.width(winWidth - closedWidth)
   else
-    $main.width($(window).width() - openWidth)
+    $main.width(winWidth - openWidth)
 
 #Ensures all swizzles are displayed in a horizontal list
 recalculateSwizzleWidth = ($swizzles, extra) ->
@@ -47,48 +32,23 @@ infiniteSwizzleScrolling = ($board, $swizzles, startScroll, sWidth, extra) ->
     recalculateSwizzleWidth $swizzles, extra
     $('.swizzle-board').scrollLeft(sWidth)
 
-displayModeOn = ->
-  console.log 'display: on'
-
-displayModeOff = ->
-  console.log 'display: off'
-
 $ =>
   #Variable declarations
   $main = $('.main-wrapper')
   $side = $('.side-wrapper')
-
-  $sideBoard = $('.side-board')
+  $menu = $('.side-menu')
+  $menuList = $('.options-list')
+  $toggle = $('.side-menu-toggle')
   $swizzleBoard = $('.swizzle-board')
-  $panelBoard = $('.panel-board')
-
-  $sideToggle = $('.side-board-toggle')
-  $displayToggle = $('.display-mode-toggle')
-
   $swizzles = $('.swizzle-status')
-  $sideBoardList = $('.options-list')
-
-  windowWidth = $(window).width()
   swizzleStatusWidth = $('.swizzle-status').outerWidth()
   sideOpenWidth = 300
-  sideClosedWidth = 25
-  mainWidthMenuOpen = windowWidth - sideOpenWidth
-  mainWidthMenuClosed = windowWidth - sideClosedWidth
-  toggleButtonDistance = sideOpenWidth - (sideClosedWidth + 6)
+  sideClosedWidth = 30
+  toggleTime = 200
   extraSwizzleWidth = 15
   startScroll = 20
 
-  $side.css
-    width : sideClosedWidth + 'px'
-    'min-width' : sideClosedWidth + 'px'
-  $sideToggle.css
-    left: '-3px'
-    width: sideClosedWidth + 'px'
-  $main.css
-    width: mainWidthMenuClosed
-  panelHeight = $panelBoard.height();
-  $panelBoard.css
-    'height' : panelHeight;
+  $main.css 'width' : ($(window).width() - sideClosedWidth) + 'px'
 
   recalculateSwizzleWidth $swizzles, extraSwizzleWidth
   $swizzleBoard.scrollLeft(startScroll)
@@ -103,25 +63,20 @@ $ =>
 
   $('.swizzle-list').hover(
     ->
-      $swizzleBoard.removeAttr('id')
+      $swizzleBoard.removeAttr 'id'
     ->
-      currScroll = $swizzleBoard.scrollLeft();
-      $swizzleBoard.attr('id', 'autoscroll')
-      $swizzleBoard.scrollLeft(currScroll)
+      currScroll = $swizzleBoard.scrollLeft()
+      $swizzleBoard.attr 'id', 'autoscroll'
+      $swizzleBoard.scrollLeft currScroll
   )
 
-  $sideToggle.click (event) ->
-    sideMenuToggle $main, $side, $sideBoard, $sideBoardList, $(event.target),
-      mainWidthMenuOpen, mainWidthMenuClosed, sideOpenWidth,
-        sideClosedWidth, toggleButtonDistance
-
-  $displayToggle.click ->
-    console.log 'toggling'
-    if !$panelBoard.hasClass 'display-mode'
-      $panelBoard.addClass 'display-mode'
-      $swizzleBoard.addClass 'display-mode'
-      displayModeOn()
+  $('.side-menu-toggle').click ->
+    winWidth = $(window).width()
+    if $side.hasClass 'menu-closed'
+      $side.removeClass 'menu-closed'
+      $main.css
+        width: (winWidth - sideOpenWidth) + 'px'
     else
-      $panelBoard.removeClass 'display-mode'
-      $swizzleBoard.removeClass 'display-mode'
-      displayModeOff()
+      $side.addClass 'menu-closed'
+      $main.css
+        width: (winWidth - sideClosedWidth) + 'px'
