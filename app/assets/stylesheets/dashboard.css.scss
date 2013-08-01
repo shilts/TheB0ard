@@ -52,9 +52,22 @@
 /* Reset code end */
 
 $toggleTime: 200ms;
-$swizzleHighliightColor: #25ff00;
 $openMenuWidth: 300px;
 $closedMenuWidth: 30px;
+
+@font-face {
+	font-family: 'Digital Dream';
+	src: font-url('DIGITALDREAMFATSKEW.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Pro-Font Windows';
+	src: font-url('ProFontWindows.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
 
 .button{
 	position: relative;
@@ -63,11 +76,14 @@ $closedMenuWidth: 30px;
 	border: 3px solid #000;
 	border-radius: 5px;
 	background: -webkit-linear-gradient(top, #FFF, #000 80%);
+	background: linear-gradient(top, #FFF, #000 80%);
 	text-align: center;
 	box-shadow: #000 10px 10px 10px;
-	cursor: pointer;
+	font-family: 'Digital Dream', 'sans serif';
+	font-size: 15pt;
 	-webkit-transform-origin: 50% 50%;
 	transform-origin: 50% 50%;
+	cursor: pointer;
 
 	&:hover {
 		background: -webkit-linear-gradient(top, darken(#FFF, 50%), #000 80%);
@@ -79,35 +95,36 @@ $closedMenuWidth: 30px;
 
 	p {
 		position: relative;
-		top: 20%;
-		font-size: 20pt;
+		top: 30%;
 		text-shadow: #000 0px -2px 0px;
 	}
 
-	&.side-menu-toggle {
+	&.side-board-toggle {
 		display: inline-block;
 		position: relative;
 		width: $closedMenuWidth - 4px;
 		height: 100%;
-		cursor: pointer;
 		border: 2px solid #000;
 		border-top: none;
 		border-bottom: none;
 		border-radius: 0;
-		background: -webkit-linear-gradient(right, #FFF, #383838 80%);
 		box-shadow: #000 -5px 0px 10px;
 		-webkit-transition: left $toggleTime;
 		transition: left $toggleTime;
 		left: $closedMenuWidth;
 		margin-top: -15px;
 		float: right;
+		background: -webkit-linear-gradient(right, #FFF, #383838 80%);
+		background: linear-gradient(right, #FFF, #383838 80%);
 
 		.toggle-button-decoration {
 			display: inline-block;
 			position: relative;
 			width: 20%;
 			height: 90%;
-			margin-top:150%;
+			margin-top: 150%;
+			margin-left: -5px;
+			margin-right: -7px;
 			box-shadow: #000 0px 0px 10px;
 			border-radius: 10px;
 		}
@@ -118,6 +135,22 @@ $closedMenuWidth: 30px;
 		margin-left: auto;
 		margin-right: auto;
 		margin-top: 20px;
+	}
+
+	&.display-mode-toggle {
+		width: 100%;
+		height: 5%;
+		margin-top: -3px;
+		border-left: none;
+		border-right: none;
+		background: -webkit-linear-gradient(top, #FFF, #383838 90%);
+		border-radius: 0;
+		box-shadow: #000 0px 7px 15px;
+		color: white;
+
+		p {
+			text-shadow: #000 5px 4px 5px;
+		}
 	}
 }
 
@@ -145,7 +178,9 @@ body {
 		position: relative;
 		width: inherit;
 		height: inherit;
-		background: lightblue url('swizzle_board_background.png') repeat;
+		background: -webkit-radial-gradient(white, blue);
+		background: radial-gradient(white, blue);
+		background: lightblue url('main_background.png') repeat;
 
 		.side-wrapper{
 			position: absolute;
@@ -224,6 +259,12 @@ body {
 				width: 100%;
 				overflow-y: hidden;
 				overflow-x: scroll;
+				-webkit-transition: height $toggleTime;
+				transition: height $toggleTime;
+
+				&.display-mode {
+					height: 95%;
+				}
 
 				.swizzle-list {
 					position: relative;
@@ -240,34 +281,88 @@ body {
 						width: 460px;
 						height: 100%;
 						margin-left: 30px;
-						background: -webkit-linear-gradient(bottom, #FFF, #000 60%);
+						background: #383830 url('black_lozenge/black_lozenge_@2X.png') repeat;
 						border: 5px solid #000;
 						vertical-align: top;
 						text-align: center;
-						color: white;
+						color: yellow;
 						word-wrap: break-word;
 						box-shadow: 20px 15px 40px #000;
+						border-radius: 5px;
+						font-family: 'Pro-font Windows', 'sans-serif';
+						font-size: 23pt;
 
 						a {
 							text-decoration: none;
 							color: inherit;
 
-							.swizzle-title {
+							.title {
 								position: relative;
+								width: 100%;
 								padding-top: 5px;
-								font-size: 30px;
-								color: $swizzleHighliightColor;
-								border: 2px solid $swizzleHighliightColor;
+								font-size: 30pt;
+								color: #000;
+								background: yellow;
+								border-radius: 2px;
+							 	box-shadow: #000 0px 15px 20px;
+							}
+						}
 
+						.swizzle-data {
+							margin-top: 7px;
+							width: 100%;
+
+							h1 {
+								padding-top: 10px;
+								margin-bottom: -5px;
 							}
 
-							.swizzle-data {
-								margin-top: 5 px;
+							p {
+								padding: 10px;
+								width: inherit;
+								height: auto;
+							}
+
+							.deployer {
+								width: inherit;
+								height: 70px;
+								background: #000;
+								text-shadow: yellow 0px 0px 10px;
 
 								p {
-									font-size: 30px;
+									width: 94%;
+									padding-top: 20px;
+									padding-right: 10px;
+									text-overflow: ellipsis;
+									white-space: nowrap;
+									overflow: hidden;
+								}
+							}
+
+							.commit-code p {
+
+								&:hover {
+									cursor: pointer;
+									text-shadow: #FFF 1px 1px 30px;
+								}
+							}
+
+							.branch {
+								width: 97%;
+								height : auto;
+								margin-left: auto;
+								margin-right: auto;
+								background: #000;
+								border-radius: 5px;
+								margin-bottom: 10px;
+								border: 3px double yellow;
+								box-shadow: yellow 0px 1px 15px;
+
+								h1 {
+									color: #FFF;
 									padding: 10px;
-									border-top: 3px double $swizzleHighliightColor;
+									font-size: 28pt;
+									text-shadow: #FFF 0px 0px 10px;
 								}
 							}
 						}
@@ -281,6 +376,9 @@ body {
 				height: 100%;
 				background: #333 url('panel_board_background.png') repeat;
 				border-top: 3px solid #000;
+				bottom: 0px;
+				-webkit-transition: bottom $toggleTime;
+				transition: bottom $toggleTime;
 			}
 		}
 

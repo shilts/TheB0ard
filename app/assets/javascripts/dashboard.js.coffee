@@ -32,15 +32,27 @@ infiniteSwizzleScrolling = ($board, $swizzles, startScroll, sWidth, extra) ->
     recalculateSwizzleWidth $swizzles, extra
     $('.swizzle-board').scrollLeft(sWidth)
 
+displayModeOn = ->
+  console.log 'display: on'
+
+displayModeOff = ->
+  console.log 'display: off'
+
 $ =>
   #Variable declarations
   $main = $('.main-wrapper')
   $side = $('.side-wrapper')
-  $menu = $('.side-menu')
-  $menuList = $('.options-list')
-  $toggle = $('.side-menu-toggle')
+
+  $sideToggle = $('.side-board-toggle')
+  $displayToggle = $('.display-mode-toggle')
+
+  $sideBoard = $('.side-menu')
   $swizzleBoard = $('.swizzle-board')
+  $panelBoard = $('.panel-board')
+
   $swizzles = $('.swizzle-status')
+  $sideBoardList = $('.options-list')
+
   swizzleStatusWidth = $('.swizzle-status').outerWidth()
   sideOpenWidth = 300
   sideClosedWidth = 30
@@ -48,7 +60,10 @@ $ =>
   extraSwizzleWidth = 15
   startScroll = 20
 
-  $main.css 'width' : ($(window).width() - sideClosedWidth) + 'px'
+  $main.css
+    'width' : ($(window).width() - sideClosedWidth) + 'px'
+  $panelBoard.css
+    'height' : ($('.panel-board').height())
 
   recalculateSwizzleWidth $swizzles, extraSwizzleWidth
   $swizzleBoard.scrollLeft(startScroll)
@@ -70,7 +85,7 @@ $ =>
       $swizzleBoard.scrollLeft currScroll
   )
 
-  $('.side-menu-toggle').click ->
+  $sideToggle.click ->
     winWidth = $(window).width()
     if $side.hasClass 'menu-closed'
       $side.removeClass 'menu-closed'
@@ -80,3 +95,14 @@ $ =>
       $side.addClass 'menu-closed'
       $main.css
         width: (winWidth - sideClosedWidth) + 'px'
+
+  $displayToggle.click ->
+    console.log 'toggling'
+    if !$panelBoard.hasClass 'display-mode'
+      $panelBoard.addClass 'display-mode'
+      $swizzleBoard.addClass 'display-mode'
+      displayModeOn()
+    else
+      $panelBoard.removeClass 'display-mode'
+      $swizzleBoard.removeClass 'display-mode'
+      displayModeOff()
