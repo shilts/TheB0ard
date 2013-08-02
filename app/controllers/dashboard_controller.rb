@@ -17,7 +17,7 @@ class DashboardController < ApplicationController
 			# {:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com', :link => ''}
 		]
 
-		#hash contents: {:title, :branch, :date, :deployer, :commitCode, :lastCommitTime, :link}
+		#hash contents: {:type, :title, :branch, :date, :deployer, :commitCode, :lastCommitTime, :link}
 		@swizzleHTMLHashArray = []
 
 		swizzleURLHashArray.each { |swizzle|
@@ -40,10 +40,13 @@ class DashboardController < ApplicationController
 		if line.include? 'application:' #done
 			if line.include? 'tripcase-rails'
 				line = (swizzle[:title] += ':Rails')
+				hash.merge! :type => 'rails'
 			elsif line.include? 'tripcase-touch2'
 				line = (swizzle[:title] += ':Touch2')
+				hash.merge! :type => 'touch2'
 			else
 				line = (swizzle[:title] += ':Unknown')
+				hash.merge! :type => '?'
 			end
 			hash.merge! :title => line
 		elsif line.include? 'branch:' #done

@@ -1,7 +1,7 @@
-<div id='autoscroll' class='swizzle-board'>
+<div class='swizzle-board autoscroll'>
 	<ul class='swizzle-list'>
 		<% @swizzleHTMLHashArray.each do |swizzleData| %>
-			<li class='swizzle-status'>
+			<li class='swizzle-status type-<%= swizzleData[:type] %>'>
 				<a href=<%=swizzleData[:link]%>>
 					<div class='title'>
 						<h1><%= swizzleData[:title] %></h1>
