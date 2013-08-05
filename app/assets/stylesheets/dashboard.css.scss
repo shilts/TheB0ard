@@ -135,6 +135,18 @@ $closedMenuWidth: 30px;
 		margin-left: auto;
 		margin-right: auto;
 		margin-top: 20px;
+
+		&.scroll-speed {
+			position: relative;
+			width: 50px;
+			height: 50px;
+			margin: 0;
+
+			&.up {
+				margin-bottom: 5px;
+			}
+
+		}
 	}
 
 	&.display-mode-toggle {
@@ -159,7 +171,7 @@ $closedMenuWidth: 30px;
 }
 
 #autoscroll {
-	-webkit-marquee: auto small infinite slide fast;
+	-webkit-marquee: left 1px infinite scroll fast;
 	overflow-x: -webkit-marquee;
 }
 
@@ -239,6 +251,41 @@ body {
 					margin-top: 25px;
 					-webkit-transition: left $toggleTime;
 					transition: left $toggleTime;
+
+					.scroll-speed-controller {
+						position: relative;
+						margin-top: 15px;
+						width: 70%;
+						margin-left: auto;
+						margin-right: auto;
+						text-align: center;
+
+						.scroll-controller-title {
+							border-bottom: 5px  double #FFF;
+						}
+
+						.scroll-controller-form {
+							position: relative;
+							display: inline-block;
+							width: 90%;
+							margin-top: 10px;
+
+							.speed-indicator {
+								position: absolute;
+								display: inline-block;
+								height: 50px;
+								width: 50%;
+								top: 25%;
+								right: 5%;
+								color: #FFF;
+								background: #000;
+								font-size: 20pt;
+								border-radius: 5px;
+								box-shadow: #000 10px 10px 10px;
+								text-align: center;
+							}
+						}
+					}
 				}
 			}
 		}

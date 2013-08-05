@@ -106,3 +106,13 @@ $ =>
       $panelBoard.removeClass 'display-mode'
       $swizzleBoard.removeClass 'display-mode'
       displayModeOff()
+
+  $('.scroll-speed').click ->
+    currSpeed = $(this).parent().find('input').val()
+    if $(this).text() == '+'
+      newSpeed = parseInt(currSpeed) + 1
+    else
+      newSpeed = parseInt(currSpeed) - 1
+    $('.swizzle-board').css
+      '-webkit-marquee-increment' : newSpeed + 'px'
+    $(this).parent().find('input').val(newSpeed)
