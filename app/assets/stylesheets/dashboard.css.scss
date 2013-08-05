@@ -298,6 +298,18 @@ body {
 						font-family: 'Pro-font Windows', 'sans-serif';
 						font-size: 23pt;
 
+					 	&.swizzle-error {
+					 		margin-top: 3%;
+							border-radius: 10px;
+
+			 				.title {
+				 				color: white;
+				 				text-shadow: #001 0px -2px 0px;
+								background: #001 url('swizzle_error.png') repeat;
+								border-radius: 10px;
+							}
+						}
+
 						a {
 							text-decoration: none;
 							color: inherit;

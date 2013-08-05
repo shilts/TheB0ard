@@ -13,24 +13,51 @@ class DashboardController < ApplicationController
 			{:title => 'S4', :url => 'http://ctovm2418.dev.sabre.com/status', :link => 'http://ctovm2418.dev.sabre.com/login'},
 			{:title => 'S4', :url => 'http://ctovm2418.dev.sabre.com/touch2/status', :link => 'http://ctovm2418.dev.sabre.com/tdot'},
 			{:title => 'S5', :url => 'http://swizzle5.tripcase.com/status', :link => ''},
-			{:title => 'S5', :url => 'http://swizzle5.tripcase.com/touch2/status', :link => ''}
-			# {:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com', :link => ''}
+			{:title => 'S5', :url => 'http://swizzle5.tripcase.com/touch2/status', :link => ''},
+			{:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com/status', :link => ''},
+			{:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com/touch2/status', :link => ''}
 		]
 
-		#hash contents: {:type, :title, :branch, :date, :deployer, :commitCode, :lastCommitTime, :link}
+		#hash contents: {:type, :title, :branch, :date, :deployer, :commitCode, :lastCommitTime, :link, :isDown}
 		@swizzleHTMLHashArray = []
 
 		swizzleURLHashArray.each { |swizzle|
 			swizzleHash = {}
-			open(swizzle[:url]) { | response |
-				response.each_line {| line |
-					if !(line.strip.empty?)
-						formatHTMLIntoHash(swizzle, line, swizzleHash)
-					end
+			begin
+				open(swizzle[:url]) { | response |
+					response.each_line {| line |
+						if !(line.strip.empty?)
+							formatHTMLIntoHash(swizzle, line, swizzleHash)
+						end
+					}
 				}
-			}
-			swizzleHash.merge! :link => swizzle[:link]
-			@swizzleHTMLHashArray.push(swizzleHash)
+				swizzleHash.merge! :link => swizzle[:link]
+				swizzleHash.merge! :isDown => 0
+				@swizzleHTMLHashArray.push(swizzleHash)
+			#end
+			rescue => e
+				case e
+				when OpenURI::HTTPError
+					puts e.message
+					puts "Your network appears to be down! LOL"
+				when SocketError
+					if swizzle[:url].include? 'touch2'
+						errorTitle = swizzle[:title] + ':Touch2 is down'
+					else
+						errorTitle = swizzle[:title] + ':Rails is down'
+					end
+					@swizzleHTMLHashArray.push({:title => errorTitle, :link => swizzle[:link], :isDown => 1})
+				when Errno::ENOENT
+					if swizzle[:url].include? 'touch2'
+						errorTitle = swizzle[:title] + ':Touch2 status page unavailable'
+					else
+						errorTitle = swizzle[:title] + ':Rails status page unavailable'
+					end
+					@swizzleHTMLHashArray.push({:title => errorTitle, :link => swizzle[:link], :isDown => 1})
+				else
+					raise e
+				end
+			end
 		}
 	end
 
