@@ -117,7 +117,7 @@ $closedMenuWidth: 30px;
 		background: -webkit-linear-gradient(right, #FFF, #383838 80%);
 		background: linear-gradient(right, #FFF, #383838 80%);
 
-		.toggle-button-decoration {
+		.side-toggle-decoration {
 			display: inline-block;
 			position: relative;
 			width: 20%;
@@ -180,13 +180,46 @@ $closedMenuWidth: 30px;
 			color: white;
 			background: #000;
 
+			.display-toggle-decoration {
+				background: #FFF;
+				box-shadow: #FF0 0px 0px 20px;
+			}
+
 			p {
-				text-shadow: yellow 0px 0px 15px;
+				text-shadow: #FF0 0px 0px 15px;
 			}
 		}
 
 		p {
-			text-shadow: #000 5px 4px 5px;
+			text-shadow: #000 3px 3px 6px;
+		}
+
+		.display-toggle-decoration {
+			position: absolute;
+			width: 40%;
+			height: 10%;
+			box-shadow: #000 0px 3px 10px;
+			border-radius: 10px;
+
+			&.left-top {
+				left: 10px;
+				top: 11px;
+			}
+
+			&.left-bottom {
+				left: 10px;
+				bottom: 11px;
+			}
+
+			&.right-top {
+				right: 10px;
+				top: 11px;
+			}
+
+			&.right-bottom {
+				right: 10px;
+				bottom: 11px;
+			}
 		}
 	}
 }
@@ -362,7 +395,7 @@ body {
 						border: 5px solid #000;
 						vertical-align: top;
 						text-align: center;
-						color: yellow;
+						color: #FF0;
 						word-wrap: break-word;
 						border-radius: 5px;
 						font-family: 'Pro-font Windows', 'sans-serif';
@@ -391,7 +424,7 @@ body {
 								padding-top: 5px;
 								font-size: 30pt;
 								color: #000;
-								background: yellow;
+								background: #FF0;
 								border-radius: 2px;
 							 	box-shadow: #000 0px 15px 20px;
 							}
@@ -416,7 +449,7 @@ body {
 								width: inherit;
 								height: 70px;
 								background: #000;
-								text-shadow: yellow 0px 0px 10px;
+								text-shadow: #FF0 0px 0px 10px;
 
 								p {
 									width: 94%;
@@ -446,8 +479,8 @@ body {
 								background: #000;
 								border-radius: 5px;
 								margin-bottom: 10px;
-								border: 3px double yellow;
-								box-shadow: yellow 0px 1px 15px;
+								border: 3px double #FF0;
+								box-shadow: #FF0 0px 1px 15px;
 								text-overflow: ellipsis;
 
 								h1 {
@@ -533,8 +566,13 @@ body {
 						color: white;
 						background: #000;
 
+						.display-toggle-decoration {
+							background: #FFF;
+							box-shadow: #FF0 0px 0px 15px;
+						}
+
 						p {
-							text-shadow: yellow 0px 0px 15px;
+							text-shadow: #FF0 0px 0px 15px;
 						}
 					}
 				}
