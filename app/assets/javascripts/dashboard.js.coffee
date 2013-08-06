@@ -100,6 +100,11 @@ activateSwizzleBoardEventHandlers = (extra) ->
 
 setSwizzleScrollSpeed = ($indicator) ->
   newSpeed = $indicator.val()
+  speedVal = parseInt(newSpeed)
+  if speedVal > 20
+    newSpeed = "20"
+  else if speedVal < "-20"
+    newSpeed = "-20"
   $('.swizzle-board').css
     '-webkit-marquee-increment' : newSpeed + 'px'
   $indicator.val newSpeed
@@ -165,9 +170,5 @@ $ =>
     $('.speed-indicator').val(parseInt($('.speed-indicator').val())- 1)
     setSwizzleScrollSpeed $('.speed-indicator')
 
-  $('.speed-indicator').on 'mousewheel', ->
+  $('.speed-indicator').bind "mousewheel keyup keydown input", ->
     setSwizzleScrollSpeed $(this)
-
-  # $('speed-indicator').on 'onchange', ->
-  #   console.log 'dude'
-  #   setSwizzleScrollSpeed $(this)
