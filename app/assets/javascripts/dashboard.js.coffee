@@ -4,12 +4,16 @@
   #http://jashkenas.github.com/coffee-script/
 
 #------Allows for dynamic resizing with the view window
-resetMainWidth = ($main, $side, openWidth, closedWidth) ->
+resetMainDimensions = ($main, $side, openWidth, closedWidth) ->
   winWidth = $(window).width()
+  winHeight = $(window).height()
   if $side.hasClass 'menu-closed'
     $main.width(winWidth - closedWidth)
   else
     $main.width(winWidth - openWidth)
+
+  $main.height(winHeight)
+  $side.height(winHeight)
 
 #------Ensures all swizzles are displayed in a horizontal list
 recalculateSwizzlesWidth = (extra) ->
@@ -139,7 +143,7 @@ $ =>
   $swizzleBoard.scrollLeft(startingScroll)
 
   $(window).resize ->
-    resetMainWidth $main, $side, sideOpenWidth, sideClosedWidth
+    resetMainDimensions $main, $side, sideOpenWidth, sideClosedWidth
 
   activateSwizzleBoardEventHandlers(extraSwizzleWidth)
 
@@ -172,3 +176,6 @@ $ =>
 
   $('.speed-indicator').bind "mousewheel keyup keydown input", ->
     setSwizzleScrollSpeed $(this)
+
+  $('.self-destruct').click ->
+    alert 'Why would you click that???'
