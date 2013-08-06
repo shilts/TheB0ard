@@ -1,0 +1,15 @@
+<h1>Edit Teh Swizzles</h1>
+<%= form_for :swizzles do |f| %>
+	<p>
+		<%= f.label :title %><br>
+		<%= f.text_field :title%><br>
+	</p>
+	<p>
+		<%= f.label :url %><br>
+		<%= f.text_field :url%><br>
+	</p>
+
+	<p>
+		<%= f.submit %>
+	</p>
+<% end %>
