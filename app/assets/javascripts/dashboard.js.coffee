@@ -3,7 +3,7 @@
 #You can use CoffeeScript in this file:
   #http://jashkenas.github.com/coffee-script/
 
-#Allows for dynamic resizing with the view window
+#------Allows for dynamic resizing with the view window
 resetMainWidth = ($main, $side, openWidth, closedWidth) ->
   winWidth = $(window).width()
   if $side.hasClass 'menu-closed'
@@ -11,79 +11,132 @@ resetMainWidth = ($main, $side, openWidth, closedWidth) ->
   else
     $main.width(winWidth - openWidth)
 
-#Ensures all swizzles are displayed in a horizontal list
-recalculateSwizzleWidth = ($swizzles, extra) ->
-  swizzleWidth = 0
-  $swizzles.each ->
-    swizzleWidth += $(this).outerWidth(true) + extra
-  $('.swizzle-list').width(swizzleWidth)
+#------Ensures all swizzles are displayed in a horizontal list
+recalculateSwizzlesWidth = (extra) ->
+  $lists = $('.swizzle-board').children()
+  $lists.each ->
+    swizzleWidth = 0
+    $(this).children().each ->
+      swizzleWidth += $(this).outerWidth(true) + (extra*2)
+    $(this).width(swizzleWidth)
 
-infiniteSwizzleScrolling = ($board, $swizzles, startScroll, sWidth, extra) ->
-  sLength = $swizzles.length
+#------infinite scrolling algorithm for the multiple swizzle boards
+infiniteSwizzleScrolling = ($thisBoard, extra) ->
+  if $('.display-mode').length > 0
+    if $thisBoard.hasClass 'top-board'
+      $board = $('.top-board')
+      $list = $('.top-board .swizzle-list')
+      $swizzles = $('.top-board .swizzle-status')
+    else
+      $board = $('.bottom-board')
+      $list = $('.bottom-board .swizzle-list')
+      $swizzles = $('.bottom-board .swizzle-status')
+  else
+    $board = $('.swizzle-board')
+    $list = $('.swizzle-list')
+    $swizzles = $('.swizzle-status')
+
+  firstWidth = $swizzles.first().outerWidth(true)
+  lastWidth = $swizzles.last().outerWidth(true)
   currScroll = $board.scrollLeft()
-  totalWidth = sWidth + extra*2
+  listWidth = $list.width()
+  windowWidth = $(window).width()
+  leftScrollBarrier = 0
+  rightScrollBarrier = (listWidth-lastWidth)
 
-  if (currScroll-totalWidth) > totalWidth
+  #upon reaching the right edge...
+  if (currScroll + windowWidth) >= (rightScrollBarrier)
     $swizzles.last().after $swizzles.first()
-    $('.swizzle-board').scrollLeft(totalWidth)
-    recalculateSwizzleWidth $swizzles, extra
-  else if currScroll == 0
+    $board.scrollLeft currScroll-firstWidth
+  #upon reaching the left edge...
+  else if currScroll <= leftScrollBarrier
     $swizzles.first().before $swizzles.last()
-    recalculateSwizzleWidth $swizzles, extra
-    $('.swizzle-board').scrollLeft(sWidth)
+    $board.scrollLeft lastWidth
 
-displayModeOn = ->
-  console.log 'display: on'
+#------activate display mode
+displayModeOn = (extra) ->
+  $mainBoard = $('.swizzle-board')
+  $mainBoard.after($mainBoard.clone().addClass 'top-board')
+  $topBoard = $('.top-board')
+  $topBoard.addClass 'display-mode'
+  $topBoard.after($mainBoard.clone().addClass 'bottom-board')
+  $bottomBoard =  $('.bottom-board')
+  $bottomBoard.addClass 'display-mode'
+  $railss = $('.bottom-board .type-rails')
+  $touch2s = $('.top-board .type-touch2')
 
-displayModeOff = ->
-  console.log 'display: off'
+  $mainBoard.toggle()
+  $touch2s.remove()
+  $railss.remove()
+  $('.top-board .commit-code').remove()
+  $('.bottom-board .commit-code').remove()
+  recalculateSwizzlesWidth extra
 
+  $('.display-mode').each ->
+    $(this).scrollLeft(100)
+
+  activateSwizzleBoardEventHandlers(extra)
+
+#------deactivate display mode
+displayModeOff = (start, extra) ->
+  $('.display-mode').remove()
+  $('.swizzle-board').toggle().scrollLeft(start)
+  recalculateSwizzlesWidth extra
+
+activateSwizzleBoardEventHandlers = (extra) ->
+  $('.swizzle-board').each ->
+    $(this).scroll ->
+      infiniteSwizzleScrolling $(this), extra
+
+  $('.swizzle-board').each ->
+    $(this).hover(
+      ->
+        $(this).removeClass 'autoscroll'
+      ->
+        currScroll = $(this).scrollLeft()
+        $(this).addClass 'autoscroll'
+        $(this).scrollLeft(currScroll)
+    )
+
+setSwizzleScrollSpeed = ($indicator) ->
+  newSpeed = $indicator.val()
+  $('.swizzle-board').css
+    '-webkit-marquee-increment' : newSpeed + 'px'
+  $indicator.val newSpeed
+
+#-----$(document).ready
 $ =>
-  #Variable declarations
+  #variable declarations
   $main = $('.main-wrapper')
   $side = $('.side-wrapper')
-
+  #main buttons
   $sideToggle = $('.side-board-toggle')
   $displayToggle = $('.display-mode-toggle')
-
+  #boards
   $sideBoard = $('.side-menu')
   $swizzleBoard = $('.swizzle-board')
   $panelBoard = $('.panel-board')
-
+  #lists
   $swizzles = $('.swizzle-status')
   $sideBoardList = $('.options-list')
-
-  swizzleStatusWidth = $('.swizzle-status').outerWidth()
+  #other
   sideOpenWidth = 300
   sideClosedWidth = 30
   toggleTime = 200
   extraSwizzleWidth = 15
-  startScroll = 20
+  startingScroll =
+    ($swizzles.first().outerWidth(true) + (extraSwizzleWidth*2))/2
 
   $main.css
     'width' : ($(window).width() - sideClosedWidth) + 'px'
-  $panelBoard.css
-    'height' : ($('.panel-board').height())
 
-  recalculateSwizzleWidth $swizzles, extraSwizzleWidth
-  $swizzleBoard.scrollLeft(startScroll)
+  recalculateSwizzlesWidth extraSwizzleWidth
+  $swizzleBoard.scrollLeft(startingScroll)
 
   $(window).resize ->
     resetMainWidth $main, $side, sideOpenWidth, sideClosedWidth
 
-  $swizzleBoard.scroll ->
-    $swizzles = $('.swizzle-status')
-    infiniteSwizzleScrolling $swizzleBoard, $swizzles,
-      startScroll, parseInt(swizzleStatusWidth, 10), extraSwizzleWidth
-
-  $('.swizzle-list').hover(
-    ->
-      $swizzleBoard.removeAttr 'id'
-    ->
-      currScroll = $swizzleBoard.scrollLeft()
-      $swizzleBoard.attr 'id', 'autoscroll'
-      $swizzleBoard.scrollLeft currScroll
-  )
+  activateSwizzleBoardEventHandlers(extraSwizzleWidth)
 
   $sideToggle.click ->
     winWidth = $(window).width()
@@ -97,22 +150,24 @@ $ =>
         width: (winWidth - sideClosedWidth) + 'px'
 
   $displayToggle.click ->
-    console.log 'toggling'
     if !$panelBoard.hasClass 'display-mode'
       $panelBoard.addClass 'display-mode'
-      $swizzleBoard.addClass 'display-mode'
-      displayModeOn()
+      displayModeOn extraSwizzleWidth
     else
       $panelBoard.removeClass 'display-mode'
-      $swizzleBoard.removeClass 'display-mode'
-      displayModeOff()
+      displayModeOff startingScroll, extraSwizzleWidth
 
-  $('.scroll-speed').click ->
-    currSpeed = $(this).parent().find('input').val()
-    if $(this).text() == '+'
-      newSpeed = parseInt(currSpeed) + 1
-    else
-      newSpeed = parseInt(currSpeed) - 1
-    $('.swizzle-board').css
-      '-webkit-marquee-increment' : newSpeed + 'px'
-    $(this).parent().find('input').val(newSpeed)
+  $('.scroll-speed.up').click ->
+    $('.speed-indicator').val(parseInt($('.speed-indicator').val()) + 1)
+    setSwizzleScrollSpeed $('.speed-indicator')
+
+  $('.scroll-speed.down').click ->
+    $('.speed-indicator').val(parseInt($('.speed-indicator').val())- 1)
+    setSwizzleScrollSpeed $('.speed-indicator')
+
+  $('.speed-indicator').on 'mousewheel', ->
+    setSwizzleScrollSpeed $(this)
+
+  # $('speed-indicator').on 'onchange', ->
+  #   console.log 'dude'
+  #   setSwizzleScrollSpeed $(this)

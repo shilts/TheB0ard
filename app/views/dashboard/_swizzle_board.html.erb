@@ -1,14 +1,15 @@
-<div id='autoscroll' class='swizzle-board'>
+<div class='swizzle-board autoscroll'>
 	<ul class='swizzle-list'>
 		<% @swizzleHTMLHashArray.each do |swizzleData| %>
-			<li class='swizzle-status'>
+			<li class='swizzle-status <% if swizzleData[:isDown] == 1 %><%= "swizzle-error" %><% else %><%= "type-" + swizzleData[:type] %><% end %>'>
 				<a href=<%=swizzleData[:link]%>>
 					<div class='title'>
 						<h1><%= swizzleData[:title] %></h1>
 					</div>
 				</a>
+				<% if swizzleData[:isDown] == 0 %>
 				<div class='swizzle-data'>
-					<div class='deployed-time'>
+					<div class='deployed-date'>
 						<p><%= swizzleData[:date] %></p>
 					</div>
 					<div class='deployer'>
@@ -22,6 +23,7 @@
 						<h1><%= swizzleData[:branch] %></h1>
 					</div>
 				</div>
+				<% end %>
 			</li>
 		<% end %>
 	</ul>
