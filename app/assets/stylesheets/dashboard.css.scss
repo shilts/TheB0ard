@@ -293,7 +293,6 @@ body {
 						text-align: center;
 						color: yellow;
 						word-wrap: break-word;
-						// box-shadow: 20px 15px 40px #000;
 						border-radius: 5px;
 						font-family: 'Pro-font Windows', 'sans-serif';
 						font-size: 23pt;
@@ -305,7 +304,8 @@ body {
 			 				.title {
 				 				color: white;
 				 				text-shadow: #001 0px -2px 0px;
-								background: #001 url('swizzle_error.png') repeat;
+				 				background: #001 url('swizzle_error.png') repeat-x;
+				 				background-size: 128px;
 								border-radius: 10px;
 							}
 						}
@@ -396,6 +396,15 @@ body {
 
 						.swizzle-status {
 							width: auto;
+
+						 	&.swizzle-error {
+						 		margin-top: 2%;
+
+				 				.title {
+					 				background-size: 300px;
+									max-width: 900px;
+								}
+							}
 
 							.deployer p {
 								padding-top: 3px;
