@@ -43,17 +43,21 @@ class DashboardController < ApplicationController
 				when SocketError
 					if swizzle[:url].include? 'touch2'
 						errorTitle = swizzle[:title] + ':Touch2 is down'
+						errorPlatform = 'touch2'
 					else
 						errorTitle = swizzle[:title] + ':Rails is down'
+						errorPlatform = 'rails'
 					end
-					@swizzleHTMLHashArray.push({:title => errorTitle, :link => swizzle[:link], :isDown => 1})
+					@swizzleHTMLHashArray.push({:type =>errorPlatform, :title => errorTitle, :link => swizzle[:link], :isDown => 1})
 				when Errno::ENOENT
 					if swizzle[:url].include? 'touch2'
-						errorTitle = swizzle[:title] + ":Touch2 status\n page unavailable"
+						errorTitle = swizzle[:title] + ":Touch2 status page unavailable"
+						errorPlatform = 'touch2'
 					else
-						errorTitle = swizzle[:title] + ":Rails status\n page unavailable"
+						errorTitle = swizzle[:title] + ":Rails status page unavailable"
+						errorPlatform = 'rails'
 					end
-					@swizzleHTMLHashArray.push({:title => errorTitle, :link => swizzle[:link], :isDown => 1})
+					@swizzleHTMLHashArray.push({:type => errorPlatform, :title => errorTitle, :link => swizzle[:link], :isDown => 1})
 				else
 					raise e
 				end
