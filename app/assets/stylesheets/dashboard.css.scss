@@ -152,7 +152,7 @@ $closedMenuWidth: 30px;
 			width: 90%;
 			bottom: -250px;
 			background: #000 url("swizzle_error.png") center repeat-x;
-			background-size: 300px;
+			background-size: 75px;
 
 			&:hover {
 				background: #F00;
@@ -375,7 +375,8 @@ body {
 			 				.title {
 				 				color: white;
 				 				text-shadow: #001 0px -2px 0px;
-								background: #001 url('swizzle_error.png') repeat;
+				 				background: #001 url('swizzle_error.png') repeat-x;
+				 				background-size: 128px;
 								border-radius: 10px;
 							}
 						}
@@ -468,11 +469,16 @@ body {
 							width: auto;
 
 							&.swizzle-error {
-								margin-top: 2%;
+						 		margin-top: 2%;
 
-								h1 {
-									margin-left: 20px;
-									margin-right: 20px;
+				 				.title {
+					 				background-size: 300px;
+									max-width: 900px;
+
+									h1 {
+										margin-left: 20px;
+										margin-right: 20px;
+									}
 								}
 							}
 

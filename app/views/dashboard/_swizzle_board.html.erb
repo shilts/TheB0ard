@@ -1,12 +1,16 @@
 <div class='swizzle-board autoscroll'>
 	<ul class='swizzle-list'>
 		<% @swizzleHTMLHashArray.each do |swizzleData| %>
-			<li class='swizzle-status <% if swizzleData[:isDown] == 1 %><%= "swizzle-error" %><% else %><%= "type-" + swizzleData[:type] %><% end %>'>
-				<a href=<%=swizzleData[:link]%>>
+			<li class='swizzle-status <% if swizzleData[:isDown] == 1%><%= 'swizzle-error' %><% else %><%= 'type-' + swizzleData[:type]%><% end %>'>
+				<% if swizzleData[:isDown] == 0%>
+				<a href=<%=swizzleData[:link]%> target="_blank">
+				<% end %>
 					<div class='title'>
 						<h1><%= swizzleData[:title] %></h1>
 					</div>
-				</a>
+				<% if swizzleData[:isDown] == 0%>
+			      </a>
+			      <% end %>
 				<% if swizzleData[:isDown] == 0 %>
 				<div class='swizzle-data'>
 					<div class='deployed-date'>
@@ -17,7 +21,7 @@
 					</div>
 					<div class='commit-code'>
 						<h1>-Last Commit-</h1>
-						<p><%= swizzleData[:commitCode] %></p>
+						<a href="http://git.labs.sabre.com:88/?p=<%= swizzleData[:type] %>.git;a=commitdiff;h=<%= swizzleData[:commitCode] %>" target="_blank"><p><%= swizzleData[:commitCode] %></p></a>
 					</div>
 					<div class='branch'>
 						<h1><%= swizzleData[:branch] %></h1>
