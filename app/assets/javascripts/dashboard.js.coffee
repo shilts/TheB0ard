@@ -4,7 +4,7 @@
   #http://jashkenas.github.com/coffee-script/
 
 #------Allows for dynamic resizing with the view window
-resetMainDimensions = ($main, $side, openWidth, closedWidth) ->
+resetMainDimensions = ($main, $side, openWidth, closedWidth, extra) ->
   winWidth = $(window).width()
   winHeight = $(window).height()
   if $side.hasClass 'menu-closed'
@@ -14,6 +14,7 @@ resetMainDimensions = ($main, $side, openWidth, closedWidth) ->
 
   $main.height(winHeight)
   $side.height(winHeight)
+  $('.panel-board').height(winHeight-$('.swizzle-board').height());
 
 #------Ensures all swizzles are displayed in a horizontal list
 recalculateSwizzlesWidth = (extra) ->
@@ -74,6 +75,7 @@ displayModeOn = (extra) ->
   $railss.remove()
   $('.top-board .commit-code').remove()
   $('.bottom-board .commit-code').remove()
+  $('.display-mode .deployed-date p').css 'font-size' : ($(window).height() - 825) + 'pt'
   recalculateSwizzlesWidth extra
 
   $('.display-mode').each ->
@@ -128,6 +130,7 @@ $ =>
   #lists
   $swizzles = $('.swizzle-status')
   $sideBoardList = $('.options-list')
+  $panelList = $('.panel-list')
   #other
   sideOpenWidth = 300
   sideClosedWidth = 30
@@ -136,11 +139,11 @@ $ =>
   startingScroll =
     ($swizzles.first().outerWidth(true) + (extraSwizzleWidth*2))/2
 
-  $main.css
-    'width' : ($(window).width() - sideClosedWidth) + 'px'
-
   recalculateSwizzlesWidth extraSwizzleWidth
   $swizzleBoard.scrollLeft(startingScroll)
+
+  $main.width $(window).width() - sideClosedWidth
+  $panelBoard.height $(window).height()-$swizzleBoard.height()
 
   $(window).resize ->
     resetMainDimensions $main, $side, sideOpenWidth, sideClosedWidth
@@ -179,3 +182,15 @@ $ =>
 
   $('.self-destruct').click ->
     alert 'Why would you click that???'
+
+  $('.panel').each ->
+    $handle = $(this).find('.panel-header')
+    $(this).draggable
+      handle: $handle
+      grid: [ 10, 10]
+      containment: 'parent'
+      scroll: 'true'
+      start: ->
+        $(this).css 'box-shadow' : '#000 20px 20px 20px'
+      stop: ->
+        $(this).css 'box-shadow' : '#000 10px 10px 10px'
