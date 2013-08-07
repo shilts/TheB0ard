@@ -54,6 +54,14 @@
 $toggleTime: 200ms;
 $openMenuWidth: 300px;
 $closedMenuWidth: 30px;
+$errorGradient: -webkit-linear-gradient(-45deg, #000 25%, #F00 25%, #F00 50%, #000 50%, #000 75%, #F00 75%, #F00);
+$errorDimensions: 93px 94px;
+$mainBackgroundGradient: -webkit-radial-gradient(25% 30%, transparent, black),
+								-webkit-radial-gradient(black 19%, transparent 20%) 0 0,
+								-webkit-radial-gradient(black 19%, transparent 20%) 11px 11px,
+								-webkit-radial-gradient(rgba(255,255,255,.2) 20%, transparent 22%) 0 1px,
+								-webkit-radial-gradient(rgba(255,255,255,.2) 20%, transparent 22%) 11px 12px;
+$mainBackgroundDimensions:  auto, 22px 22px, 22px 22px, 22px 22px, 22px 22px;
 
 @font-face {
 	font-family: 'Digital Dream';
@@ -150,12 +158,13 @@ $closedMenuWidth: 30px;
 
 		&.self-destruct {
 			width: 90%;
-			bottom: -250px;
-			background: #000 url("swizzle_error.png") center repeat-x;
-			background-size: 75px;
+			bottom: -10px;
+			background: #000 $errorGradient;
+			background-size: $errorDimensions;
+			box-shadow: none;
 
 			&:hover {
-				background: #F00;
+				box-shadow: #F00 0px 0px 20px;
 			}
 
 			p {
@@ -277,9 +286,9 @@ body {
 		position: relative;
 		width: inherit;
 		height: inherit;
-		background: -webkit-radial-gradient(white, blue);
-		background: radial-gradient(white, blue);
-		background: lightblue url('main_background.png') repeat;
+		background: $mainBackgroundGradient;
+		background-size: $mainBackgroundDimensions;
+		background-color: #666;
 
 		.side-wrapper{
 			position: absolute;
@@ -436,9 +445,9 @@ body {
 			 				.title {
 				 				color: white;
 				 				text-shadow: #001 0px -2px 0px;
-				 				background: #001 url('swizzle_error.png') repeat-x;
-				 				background-size: 128px;
-								border-radius: 10px;
+				 				background: #000 $errorGradient;
+				 				background-size: $errorDimensions;
+								border-radius: 5px;
 							}
 						}
 
@@ -533,8 +542,8 @@ body {
 						 		margin-top: 2%;
 
 				 				.title {
-					 				background-size: 300px;
 									max-width: 900px;
+									background-size: 300px 300px;
 
 									h1 {
 										margin-left: 20px;
@@ -582,9 +591,8 @@ body {
 				position: relative;
 				width: 100%;
 				height: 100%;
-				background: #333 url('panel_board_background.png') repeat;
+				background: -webkit-radial-gradient(bottom, #F00 30%, #000);
 				border-top: 3px solid #000;
-				bottom: 0px;
 				-webkit-transition: bottom $toggleTime;
 				transition: bottom $toggleTime;
 
