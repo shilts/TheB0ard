@@ -54,6 +54,14 @@
 $toggleTime: 200ms;
 $openMenuWidth: 300px;
 $closedMenuWidth: 30px;
+$errorGradient: -webkit-linear-gradient(-45deg, #000 25%, #F00 25%, #F00 50%, #000 50%, #000 75%, #F00 75%, #F00);
+$errorDimensions: 93px 94px;
+$mainBackgroundGradient: -webkit-radial-gradient(25% 30%, transparent, black),
+								-webkit-radial-gradient(black 19%, transparent 20%) 0 0,
+								-webkit-radial-gradient(black 19%, transparent 20%) 11px 11px,
+								-webkit-radial-gradient(rgba(255,255,255,.2) 20%, transparent 22%) 0 1px,
+								-webkit-radial-gradient(rgba(255,255,255,.2) 20%, transparent 22%) 11px 12px;
+$mainBackgroundDimensions:  auto, 22px 22px, 22px 22px, 22px 22px, 22px 22px;
 
 @font-face {
 	font-family: 'Digital Dream';
@@ -93,6 +101,10 @@ $closedMenuWidth: 30px;
 		}
 	}
 
+	&:active {
+		box-shadow: #000 5px 5px 5px;
+	}
+
 	p {
 		position: relative;
 		top: 30%;
@@ -117,7 +129,7 @@ $closedMenuWidth: 30px;
 		background: -webkit-linear-gradient(right, #FFF, #383838 80%);
 		background: linear-gradient(right, #FFF, #383838 80%);
 
-		.toggle-button-decoration {
+		.side-toggle-decoration {
 			display: inline-block;
 			position: relative;
 			width: 20%;
@@ -150,12 +162,13 @@ $closedMenuWidth: 30px;
 
 		&.self-destruct {
 			width: 90%;
-			bottom: -250px;
-			background: #000 url("swizzle_error.png") center repeat-x;
-			background-size: 75px;
+			bottom: -10px;
+			background: #000 $errorGradient;
+			background-size: $errorDimensions;
+			box-shadow: none;
 
 			&:hover {
-				background: #F00;
+				box-shadow: #F00 0px 0px 20px;
 			}
 
 			p {
@@ -166,33 +179,71 @@ $closedMenuWidth: 30px;
 	}
 
 	&.display-mode-toggle {
-		width: 100%;
-		height: 40px;
-		margin-top: -3px;
-		border-left: none;
-		border-right: none;
-		background: -webkit-linear-gradient(top, #FFF, #383838 90%);
-		background: linear-gradient(top, #FFF, #383838 90%);
-		border-radius: 0;
-		box-shadow: #000 0px 7px 15px;
 
 		&:hover {
 			color: white;
 			background: #000;
 
+			.decoration-wrapper {
+
+				.display-toggle-decoration {
+					background: #FFF;
+					box-shadow: #FF0 0px 0px 20px;
+				}
+			}
+
 			p {
-				text-shadow: yellow 0px 0px 15px;
+				text-shadow: #FF0 0px 0px 15px;
 			}
 		}
 
-		p {
-			text-shadow: #000 5px 4px 5px;
+
+
+		.decoration-wrapper {
+			display: inline-block;
+			position: relative;
+			width: 35%;
+			height: 90%;
+
+			&.left {
+				float: left;
+				margin-left: 3.5%;
+			}
+
+			&.right {
+				float: right;
+				margin-right: 4%;
+			}
+
+			.display-toggle-decoration {
+				position: absolute;
+				width: 97%;
+				height: 10%;
+				box-shadow: #000 0px 3px 10px;
+				border-radius: 10px;
+
+				&.left-top {
+					left: 10px;
+					top: 12px;
+				}
+
+				&.left-bottom {
+					left: 10px;
+					bottom: 9px;
+				}
+
+				&.right-top {
+					right: 10px;
+					top: 12px;
+				}
+
+				&.right-bottom {
+					right: 10px;
+					bottom: 9px;
+				}
+			}
 		}
 	}
-}
-
-::-webkit-scrollbar {
-	display: none;
 }
 
 input::-webkit-outer-spin-button,
@@ -216,9 +267,9 @@ body {
 		position: relative;
 		width: inherit;
 		height: inherit;
-		background: -webkit-radial-gradient(white, blue);
-		background: radial-gradient(white, blue);
-		background: lightblue url('main_background.png') repeat;
+		background: $mainBackgroundGradient;
+		background-size: $mainBackgroundDimensions;
+		background-color: #666;
 
 		.side-wrapper{
 			position: absolute;
@@ -236,6 +287,13 @@ body {
 
 				&.menu-closed {
 					left: -($openMenuWidth - $closedMenuWidth);
+
+					&:hover {
+
+						.side-board-toggle {
+							left: 45px;
+						}
+					}
 				}
 
 			.side-board {
@@ -252,28 +310,30 @@ body {
 					margin-top: 15px;
 					margin-left: auto;
 					margin-right: auto;
-					background: #000 url('dashboard_icon.png') center no-repeat;
+					background: #000 url('icon_tripdash.png') center no-repeat;
 					background-size: 150px;
 					border: 3px solid #000;
 					border-radius: 10px;
 					text-align: center;
 					color: black;
-					border: 2px double #FFF;
+					border: 2px solid #FFF;
 					box-shadow: #000 10px 10px 10px;
 					-webkit-transition: -webkit-transform 100ms;
 					transition: -webkit-transform 100ms;
 
 					&:hover {
-						background: #FFF url('dashboard_icon.png') center no-repeat;
+						background: #FFF url('icon_tripdash_active.png') center no-repeat;
 						-webkit-transform-origin: 50% 50%;
-						-webkit-transform: rotate(10deg);
+						-webkit-transform: rotate(5deg);
 						transform-origin: 50% 50%;
-						transform: rotate(10deg);
+						transform: rotate(5deg);
 					}
 				}
 
 				.options-list {
 					position: relative;
+					width: 100%;
+					height: 75%;
 					margin-top: 25px;
 					-webkit-transition: left $toggleTime;
 					transition: left $toggleTime;
@@ -314,6 +374,18 @@ body {
 							}
 						}
 					}
+
+					.display-mode-toggle {
+						width: 70%;
+						height: 75px;
+						margin-top: 15px;
+						margin-left: auto;
+						margin-right: auto;
+
+						p {
+							top: 25%;
+						}
+					}
 				}
 			}
 		}
@@ -328,6 +400,11 @@ body {
 			float: right;
 			-webkit-transition: width $toggleTime;
 			transition: width $toggleTime;
+			overflow: hidden;
+
+			.swizzle-board::-webkit-scrollbar {
+					display: none;
+			}
 
 			.swizzle-board {
 				height: auto;
@@ -362,7 +439,7 @@ body {
 						border: 5px solid #000;
 						vertical-align: top;
 						text-align: center;
-						color: yellow;
+						color: #FF0;
 						word-wrap: break-word;
 						border-radius: 5px;
 						font-family: 'Pro-font Windows', 'sans-serif';
@@ -375,10 +452,9 @@ body {
 			 				.title {
 				 				color: white;
 				 				text-shadow: #001 0px -2px 0px;
-				 				background: #001 url('swizzle_error.png') repeat-x;
-				 				background-size: 128px;
-								border-radius: 10px;
-								font-size: 40px;
+								background: #000 $errorGradient;
+				 				background-size: $errorDimensions;
+								border-radius: 5px;
 							}
 
 							.swizzle-data {
@@ -401,7 +477,7 @@ body {
 								padding-top: 5px;
 								font-size: 30pt;
 								color: #000;
-								background: yellow;
+								background: #FF0;
 								border-radius: 2px;
 							 	box-shadow: #000 0px 15px 20px;
 							}
@@ -426,7 +502,7 @@ body {
 								width: inherit;
 								height: 70px;
 								background: #000;
-								text-shadow: yellow 0px 0px 10px;
+								text-shadow: #FF0 0px 0px 10px;
 
 								p {
 									width: 94%;
@@ -456,8 +532,8 @@ body {
 								background: #000;
 								border-radius: 5px;
 								margin-bottom: 10px;
-								border: 3px double yellow;
-								box-shadow: yellow 0px 1px 15px;
+								border: 3px double #FF0;
+								box-shadow: #FF0 0px 1px 15px;
 								text-overflow: ellipsis;
 
 								h1 {
@@ -482,8 +558,8 @@ body {
 						 		margin-top: 2%;
 
 				 				.title {
-					 				background-size: 300px;
 									max-width: 900px;
+									background-size: 300px 300px;
 
 									h1 {
 										margin-left: 20px;
@@ -531,20 +607,166 @@ body {
 				position: relative;
 				width: 100%;
 				height: 100%;
-				background: #333 url('panel_board_background.png') repeat;
+				background: -webkit-radial-gradient(bottom, #F00 30%, #000);
 				border-top: 3px solid #000;
-				bottom: 0px;
 				-webkit-transition: bottom $toggleTime;
 				transition: bottom $toggleTime;
 
 				&.display-mode {
 
 					.display-mode-toggle {
-						color: white;
+						color: #FFF;
 						background: #000;
 
+						&:hover {
+							color: #000;
+							background: -webkit-linear-gradient(top, #FFF, #383838 90%);
+							background: linear-gradient(top, #FFF, #383838 90%);
+
+							.display-toggle-decoration {
+								background: none;
+								box-shadow: #000 0px 3px 10px;
+							}
+
+							p {
+								text-shadow: #000 3px 3px 6px;
+							}
+						}
+
+						.display-toggle-decoration {
+							background: #FFF;
+							box-shadow: #FF0 0px 0px 15px;
+						}
+
 						p {
-							text-shadow: yellow 0px 0px 15px;
+							text-shadow: #FF0 0px 0px 15px;
+						}
+					}
+				}
+
+				.display-mode-toggle {
+					min-width: 1000px;
+					width: 100%;
+					height: 40px;
+					margin-top: -3px;
+					border-left: none;
+					border-right: none;
+					background: -webkit-linear-gradient(top, #FFF, #383838 90%);
+					background: linear-gradient(top, #FFF, #383838 90%);
+					border-radius: 0;
+					box-shadow: #000 0px 7px 15px;
+
+			 		p {
+						display: inline-block;
+						position: relative;
+						width: 10%;
+						min-width: 200px;
+						left: 0px;
+						text-shadow: #000 3px 3px 6px;
+						text-aligh: left;
+					}
+				}
+
+				.panel-grid-wrapper {
+					position: relative;
+					width: 98%;
+					height: 82%;
+					min-width: 200px;
+					min-height: 100px;
+					margin: 1%;
+					border: 3px solid #000;
+					overflow-x: hidden;
+					overflow-y: scroll;
+
+					.panel-grid-space {
+						position: relative;
+						height: 1000px;
+						width: 100%;
+						min-height: 100%;
+						background: url("panel_grid_background.png") repeat;
+						background-size: 8px;
+
+						.panel {
+							position: absolute;
+							left: 10px;
+							top: 10px;
+							width: 400px;
+							height: 200px;
+							background: #000 url('black_lozenge/black_lozenge.png') repeat;
+							background-size: 50px;
+							border: 3px solid #000;
+							margin: 10px;
+							border-radius: 5px;
+							box-shadow: #000 10px 10px 10px;
+
+							&.top-header {
+
+								.panel-header {
+									width: 100%;
+									height: 20%;
+									box-shadow: #000 0px 6px 10px;
+								}
+
+								.panel-body {
+									height: 80%;
+									width: 100%;
+								}
+							}
+
+							&.side-header {
+
+								.panel-header {
+									width: 20%;
+									height: 100%;
+									box-shadow: #000 6px 0px 10px;
+
+									&.left {
+										float: left;
+									}
+
+									&.right {
+										float: right;
+									}
+								}
+
+								.panel-body {
+									height: 100%;
+									width: 80%;
+								}
+							}
+
+							.panel-header {
+								position: relative;
+								background: $mainBackgroundGradient;
+								background-color: #383838;
+								background-size: $mainBackgroundDimensions;
+								border-right: 2px solid #000;
+								border-radius: 2px;
+
+								&:hover {
+									cursor: move;
+								}
+
+								.header-icon {
+									position: relative;
+									width: 90%;
+									height: 50%;
+									margin: auto;
+									border-radius: 15px;
+
+									&.git {
+										top: 30%;
+										height: 40%;
+										background: #000 url("icon_git.png") center no-repeat;
+										background-size: 100%;
+									}
+								}
+							}
+
+							.panel-body {
+								width: auto;
+								height: auto;
+							}
 						}
 					}
 				}
