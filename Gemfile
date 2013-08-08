@@ -23,7 +23,6 @@ end
 gem "jquery-rails"
 gem "jquery-ui-rails"
 
-
 #user specified required gems
 
 

@@ -205,8 +205,7 @@ $ =>
   sideClosedWidth = 30
   toggleTime = 200
   extraSwizzleWidth = 15
-  startingScroll =
-    ($swizzles.first().outerWidth(true) + (extraSwizzleWidth*2))/2
+  startingScroll = ($swizzles.first().outerWidth(true) + (extraSwizzleWidth*2))/2
 
   recalculateSwizzlesWidth extraSwizzleWidth
   $swizzleBoard.scrollLeft(startingScroll)
@@ -218,8 +217,9 @@ $ =>
     resetMainDimensions $main, $side, sideOpenWidth, sideClosedWidth
 
   activateSwizzleBoardEventHandlers(extraSwizzleWidth)
-
-  setInterval "refreshSwizzleData(extraSwizzleWidth)", 30000
+  setInterval ->
+    refreshSwizzleData extraSwizzleWidth
+  , 15000
 
   $sideToggle.click ->
     winWidth = $(window).width()
