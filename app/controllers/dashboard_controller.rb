@@ -12,16 +12,29 @@ class DashboardController < ApplicationController
 			{:title => 'S3', :url => 'http://ctovm2417.dev.sabre.com/touch2/status', :link => 'http://ctovm2417.dev.sabre.com/tdot'},
 			{:title => 'S4', :url => 'http://ctovm2418.dev.sabre.com/status', :link => 'http://ctovm2418.dev.sabre.com/login'},
 			{:title => 'S4', :url => 'http://ctovm2418.dev.sabre.com/touch2/status', :link => 'http://ctovm2418.dev.sabre.com/tdot'},
-			{:title => 'S5', :url => 'http://swizzle5.tripcase.com/status', :link => ''},
-			{:title => 'S5', :url => 'http://swizzle5.tripcase.com/touch2/status', :link => ''},
-			{:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com/status', :link => ''},
-			{:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com/touch2/status', :link => ''}
+			{:title => 'S5', :url => 'http://swizzle5.tripcase.com/status', :link => 'http://swizzle5.tripcase.com/login'},
+			{:title => 'S5', :url => 'http://swizzle5.tripcase.com/touch2/status', :link => 'http://swizzle5.tripcase.com/tdot'},
+			{:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com/status', :link => 'ltxl0208.sgdcelab.sabre.com/login'},
+			{:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com/touch2/status', :link => 'ltxl0208.sgdcelab.sabre.com/tdot'}
 		]
 
 		#hash contents: {:type, :title, :branch, :date, :deployer, :commitCode, :lastCommitTime, :link, :isDown}
 		@swizzleHTMLHashArray = []
 
-		swizzleURLHashArray.each { |swizzle|
+		fetch_swizzle_data(swizzleURLHashArray, @swizzleHTMLHashArray)
+
+		respond_to do |format|
+			format.html
+			format.json {
+				@swizzleHTMLHashArray = []
+				fetch_swizzle_data(swizzleURLHashArray, @swizzleHTMLHashArray)
+				render :json => @swizzleHTMLHashArray
+			}
+		end
+	end
+
+	def fetch_swizzle_data(swizzleURLArray, swizzleDataArray)
+		swizzleURLArray.each { |swizzle|
 			swizzleHash = {}
 			begin
 				open(swizzle[:url]) { | response |
@@ -33,32 +46,33 @@ class DashboardController < ApplicationController
 				}
 				swizzleHash.merge! :link => swizzle[:link]
 				swizzleHash.merge! :isDown => 0
-				@swizzleHTMLHashArray.push(swizzleHash)
-			#end
+				swizzleDataArray.push(swizzleHash)
 			rescue => e
 				case e
 				when OpenURI::HTTPError
 					puts e.message
 					puts "Your network appears to be down! LOL"
+					puts "Wait...how are you reading this...?"
 				when SocketError
 					if swizzle[:url].include? 'touch2'
 						errorTitle = swizzle[:title] + ':Touch2 is down'
 					else
 						errorTitle = swizzle[:title] + ':Rails is down'
 					end
-					@swizzleHTMLHashArray.push({:title => errorTitle, :link => swizzle[:link], :isDown => 1})
+					swizzleDataArray.push({:title => errorTitle, :link => swizzle[:link], :isDown => 1})
 				when Errno::ENOENT
 					if swizzle[:url].include? 'touch2'
 						errorTitle = swizzle[:title] + ":Touch2 status\n page unavailable"
 					else
 						errorTitle = swizzle[:title] + ":Rails status\n page unavailable"
 					end
-					@swizzleHTMLHashArray.push({:title => errorTitle, :link => swizzle[:link], :isDown => 1})
+					swizzleDataArray.push({:title => errorTitle, :link => swizzle[:link], :isDown => 1})
 				else
 					raise e
 				end
 			end
 		}
+		return swizzleDataArray
 	end
 
 	def formatHTMLIntoHash (swizzle, line, hash)
@@ -100,26 +114,27 @@ class DashboardController < ApplicationController
 			line.slice! 'release revision:'
 			line.strip!
 			hash.merge! :commitCode => line
-		elsif line.include? 'release timestamp:' #done
-			line.slice! 'release timestamp:'
-			line.strip!
-			date = convertTimestampToDateFormat(line)
-			hash.merge! :lastCommitTime => date
+		# elsif line.include? 'release timestamp:' #done
+		# 	line.slice! 'release timestamp:'
+		# 	line.strip!
+		# 	date = convertTimestampToDateFormat(line)
+		# 	hash.merge! :lastCommitTime => date
 		end
 	end
 end
 
-def convertTimestampToDateFormat (timeStamp)
-	year = timeStamp[0...4]
-	month = timeStamp[5...6]
-	day = timeStamp[6...8]
-	hour = ((timeStamp[8...10]).to_i - 5).to_s
-	minute = timeStamp[10...12]
-	second = timeStamp[12...14]
+# --- Just in case anyone decides the timestamps are useful ---
+# def convertTimestampToDateFormat (timeStamp)
+# 	year = timeStamp[0...4]
+# 	month = timeStamp[5...6]
+# 	day = timeStamp[6...8]
+# 	hour = ((timeStamp[8...10]).to_i - 5).to_s
+# 	minute = timeStamp[10...12]
+# 	second = timeStamp[12...14]
 
-	month = Date::ABBR_MONTHNAMES[month.to_i]
+# 	month = Date::ABBR_MONTHNAMES[month.to_i]
 
-	newTimeStamp = (month + " " + day + ", " + year + " @ " + hour + ":" + minute + ":" + second + " CDT")
+# 	newTimeStamp = (month + " " + day + ", " + year + " @ " + hour + ":" + minute + ":" + second + " CDT")
 
-	return newTimeStamp
-end
+# 	return newTimeStamp
+# end
