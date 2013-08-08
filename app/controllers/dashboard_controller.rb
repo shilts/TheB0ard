@@ -1,6 +1,5 @@
 require 'open-uri'
-require 'timeout'
-require 'date'
+# require 'date'
 
 class DashboardController < ApplicationController
 
@@ -62,9 +61,9 @@ class DashboardController < ApplicationController
 					swizzleDataArray.push({:title => errorTitle, :link => swizzle[:link], :isDown => 1})
 				when Errno::ENOENT
 					if swizzle[:url].include? 'touch2'
-						errorTitle = swizzle[:title] + ":Touch2 status\n page unavailable"
+						errorTitle = swizzle[:title] + ":Touch2 status page unavailable"
 					else
-						errorTitle = swizzle[:title] + ":Rails status\n page unavailable"
+						errorTitle = swizzle[:title] + ":Rails status page unavailable"
 					end
 					swizzleDataArray.push({:title => errorTitle, :link => swizzle[:link], :isDown => 1})
 				else
@@ -80,13 +79,13 @@ class DashboardController < ApplicationController
 		line.slice! '</p>'
 		if line.include? 'application:' #done
 			if line.include? 'tripcase-rails'
-				line = (swizzle[:title] += ':Rails')
+				line = (swizzle[:title] + ':Rails')
 				hash.merge! :type => 'rails'
 			elsif line.include? 'tripcase-touch2'
-				line = (swizzle[:title] += ':Touch2')
+				line = (swizzle[:title] + ':Touch2')
 				hash.merge! :type => 'touch2'
 			else
-				line = (swizzle[:title] += ':Unknown')
+				line = (swizzle[:title] + ':Unknown')
 				hash.merge! :type => '?'
 			end
 			hash.merge! :title => line

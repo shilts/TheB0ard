@@ -79,7 +79,8 @@ displayModeOn = (extra) ->
   $('.display-mode').each ->
     $(this).scrollLeft(100)
 
-  activateSwizzleBoardEventHandlers(extra)
+  activateSwizzleBoardEventHandlers extra
+  refreshSwizzleData extra
 
 #------deactivate display mode
 displayModeOff = (start, extra) ->
@@ -113,7 +114,7 @@ setSwizzleScrollSpeed = ($indicator) ->
     '-webkit-marquee-increment' : newSpeed + 'px'
   $indicator.val newSpeed
 
-refreshSwizzleData = ->
+refreshSwizzleData = (extra) ->
   $.ajax
     type: 'GET'
     dataType: "json"
@@ -124,28 +125,62 @@ refreshSwizzleData = ->
         if newSwizzle.isDown
           newTitle = newSwizzle.title
           downedSwizzle = newTitle.substr 0, newTitle.indexOf ' '
-          oldSwizzle = $('h1:contains(' + downedSwizzle + ')').parent().parent().parent()
-          if oldSwizzle.hasClass 'swizzle-error'
-            console.log '     ERROR: ' + downedSwizzle + ' is still not responding'
-          else
-            oldSwizzle.addClass 'swizzle-error'
-            oldSwizzle.find('.title h1').text(newTitle)
-            console.log '     ERROR: ' + downedSwizzle + ' is not responding'
+          oldSwizzles = $('h1:contains(' + downedSwizzle + ')').parent().parent().parent()
+          oldSwizzles.each ->
+            if oldSwizzle.hasClass 'swizzle-error'
+              console.log '     ERROR: ' + downedSwizzle + ' is still not responding'
+            else
+              oldSwizzle.addClass 'swizzle-error'
+              oldSwizzle.find('.title h1').text(newTitle)
+              console.log '     ERROR: ' + downedSwizzle + ' is not responding'
+              board = oldSwizzle.parent()
+              recalculateSwizzlesWidth extra
+              scrollToSwizzle oldSwizzle.attr 'id', board
         else
           for oldSwizzle in swizzles
             oldSwizzle = $(oldSwizzle)
-            if (newSwizzle.commitCode != oldSwizzle.find('.commit-code p').text()) && (newSwizzle.title == oldSwizzle.find('.title h1').text())
-              console.log '     Updating ' + newSwizzle.title + '...'
-              oldSwizzle.find('.title h1').text(newSwizzle.title)
-              oldSwizzle.find('.deployed-date p').text(newSwizzle.date)
-              oldSwizzle.find('.deployer p').text(newSwizzle.deployer)
-              oldSwizzle.find('.commit-code p').text(newSwizzle.commitCode)
-              newGitURL = "http://git.labs.sabre.com:88/?p=" + newSwizzle.type + ".git;a=commitdiff;h=" + newSwizzle.commitCode
-              oldSwizzle.find('.commit-code a').attr('href', newGitURL)
-              oldSwizzle.find('.branch h1').text(newSwizzle.branch)
-              console.log '       ' + newSwizzle.branch + ' has been deployed to ' + newSwizzle.title
+            oldSwizzle.each ->
+              if (newSwizzle.date != oldSwizzle.find('.deployed-date p').text()) && (newSwizzle.title == oldSwizzle.find('.title h1').text())
+                console.log '     Updating ' + newSwizzle.title + '...'
+                oldSwizzle.find('.title h1').text(newSwizzle.title)
+                oldSwizzle.find('.deployed-date p').text(newSwizzle.date)
+                oldSwizzle.find('.deployer p').text(newSwizzle.deployer)
+                oldSwizzle.find('.commit-code p').text(newSwizzle.commitCode)
+                newGitURL = "http://git.labs.sabre.com:88/?p=" + newSwizzle.type + ".git;a=commitdiff;h=" + newSwizzle.commitCode
+                oldSwizzle.find('.commit-code a').attr('href', newGitURL)
+                oldSwizzle.find('.branch h1').text(newSwizzle.branch)
+                console.log '       ' + newSwizzle.branch + ' has been deployed to ' + newSwizzle.title
+                board = oldSwizzle.parent()
+                recalculateSwizzlesWidth extra
+                scrollToSwizzle oldSwizzle.attr 'id', board
     error: ->
       console.log '     DANGER WILL ROBINSON: AJAX FAILURE'
+
+scrollToSwizzle = (name, $board) ->
+  if $board.hasClass 'top-board'
+    console.log 'scrolling to ' + $('.top-board #'+name).position().left
+    $board.animate
+      'scrollLeft': $('.top-board #'+name).position().left - ($(window).width()/5)
+      200
+      'swing'
+      ->
+        # $('.top-board #'+name).effect 'bounce', 'fast'
+  else if $board.hasClass 'bottom-board'
+    console.log 'scrolling to ' + $('.bottom-board #'+name).position().left
+    $board.animate
+      'scrollLeft': $('.bottom-board #'+name).position().left -($(window).width()/5)
+      200
+      'swing'
+      ->
+        # $('.bottom-board #'+name).effect 'bounce', 'fast'
+  else
+    console.log 'scrolling to ' + $('#'+name).position().left
+    $board.animate
+      'scrollLeft': $('#'+name).position().left - ($(window).width()/3)
+      200
+      'swing'
+      ->
+        # $('.swizzle-board #'+name).effect 'bounce', 'fast'
 
 #-----$(document).ready
 $ =>
@@ -181,7 +216,7 @@ $ =>
 
   activateSwizzleBoardEventHandlers(extraSwizzleWidth)
 
-  setInterval refreshSwizzleData, 30000
+  setInterval "refreshSwizzleData(extraSwizzleWidth)", 30000
 
   $sideToggle.click ->
     winWidth = $(window).width()
@@ -196,7 +231,9 @@ $ =>
 
   $('.refresh').click ->
     console.log "refreshin' teh swizzles..."
-    refreshSwizzleData()
+    refreshSwizzleData(extraSwizzleWidth)
+
+  $('.edit-config').click ->
 
   $displayToggle.click ->
     if !$panelBoard.hasClass 'display-mode'
