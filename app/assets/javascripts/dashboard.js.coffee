@@ -113,6 +113,40 @@ setSwizzleScrollSpeed = ($indicator) ->
     '-webkit-marquee-increment' : newSpeed + 'px'
   $indicator.val newSpeed
 
+refreshSwizzleData = ->
+  $.ajax
+    type: 'GET'
+    dataType: "json"
+    url: './refresh_data'
+    success: (data)->
+      swizzles = $('.swizzle-status')
+      for newSwizzle in data
+        if newSwizzle.isDown
+          newTitle = newSwizzle.title
+          downedSwizzle = newTitle.substr 0, newTitle.indexOf ' '
+          oldSwizzle = $('h1:contains(' + downedSwizzle + ')').parent().parent().parent()
+          if oldSwizzle.hasClass 'swizzle-error'
+            console.log '     ERROR: ' + downedSwizzle + ' is still not responding'
+          else
+            oldSwizzle.addClass 'swizzle-error'
+            oldSwizzle.find('.title h1').text(newTitle)
+            console.log '     ERROR: ' + downedSwizzle + ' is not responding'
+        else
+          for oldSwizzle in swizzles
+            oldSwizzle = $(oldSwizzle)
+            if (newSwizzle.commitCode != oldSwizzle.find('.commit-code p').text()) && (newSwizzle.title == oldSwizzle.find('.title h1').text())
+              console.log '     Updating ' + newSwizzle.title + '...'
+              oldSwizzle.find('.title h1').text(newSwizzle.title)
+              oldSwizzle.find('.deployed-date p').text(newSwizzle.date)
+              oldSwizzle.find('.deployer p').text(newSwizzle.deployer)
+              oldSwizzle.find('.commit-code p').text(newSwizzle.commitCode)
+              newGitURL = "http://git.labs.sabre.com:88/?p=" + newSwizzle.type + ".git;a=commitdiff;h=" + newSwizzle.commitCode
+              oldSwizzle.find('.commit-code a').attr('href', newGitURL)
+              oldSwizzle.find('.branch h1').text(newSwizzle.branch)
+              console.log '       ' + newSwizzle.branch + ' has been deployed to ' + newSwizzle.title
+    error: ->
+      console.log '     DANGER WILL ROBINSON: AJAX FAILURE'
+
 #-----$(document).ready
 $ =>
   #variable declarations
@@ -147,6 +181,8 @@ $ =>
 
   activateSwizzleBoardEventHandlers(extraSwizzleWidth)
 
+  setInterval refreshSwizzleData, 30000
+
   $sideToggle.click ->
     winWidth = $(window).width()
     if $side.hasClass 'menu-closed'
@@ -157,6 +193,10 @@ $ =>
       $side.addClass 'menu-closed'
       $main.css
         width: (winWidth - sideClosedWidth) + 'px'
+
+  $('.refresh').click ->
+    console.log "refreshin' teh swizzles..."
+    refreshSwizzleData()
 
   $displayToggle.click ->
     if !$panelBoard.hasClass 'display-mode'

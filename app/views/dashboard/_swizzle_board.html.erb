@@ -2,16 +2,11 @@
 	<ul class='swizzle-list'>
 		<% @swizzleHTMLHashArray.each do |swizzleData| %>
 			<li class='swizzle-status <% if swizzleData[:isDown] == 1%><%= 'swizzle-error' %><% else %><%= 'type-' + swizzleData[:type]%><% end %>'>
-				<% if swizzleData[:isDown] == 0%>
 				<a href=<%=swizzleData[:link]%> target="_blank">
-				<% end %>
 					<div class='title'>
 						<h1><%= swizzleData[:title] %></h1>
 					</div>
-				<% if swizzleData[:isDown] == 0%>
 			      </a>
-			      <% end %>
-				<% if swizzleData[:isDown] == 0 %>
 				<div class='swizzle-data'>
 					<div class='deployed-date'>
 						<p><%= swizzleData[:date] %></p>
@@ -27,7 +22,6 @@
 						<h1><%= swizzleData[:branch] %></h1>
 					</div>
 				</div>
-				<% end %>
 			</li>
 		<% end %>
 	</ul>

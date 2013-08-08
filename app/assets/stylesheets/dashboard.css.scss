@@ -378,6 +378,16 @@ body {
 				 				background: #001 url('swizzle_error.png') repeat-x;
 				 				background-size: 128px;
 								border-radius: 10px;
+								font-size: 40px;
+							}
+
+							.swizzle-data {
+								display: none;
+
+								a {
+									pointer-events: none;
+								      cursor: default;
+								}
 							}
 						}
 
