@@ -215,6 +215,7 @@ $ =>
     resetMainDimensions $main, $side, sideOpenWidth, sideClosedWidth
 
   activateSwizzleBoardEventHandlers(extraSwizzleWidth)
+
   setInterval ->
     refreshSwizzleData(extraSwizzleWidth)
   , 15000
