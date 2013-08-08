@@ -1,7 +1,7 @@
 <div class='swizzle-board autoscroll'>
 	<ul class='swizzle-list'>
 		<% @swizzleHTMLHashArray.each do |swizzleData| %>
-			<li id='<% if swizzleData[:isDown]==0 %><%= swizzleData[:title].downcase.sub(':', '-') %><% else %><%= swizzleData[:title].split[0].downcase.sub(':', '-')  %><% end %>' class='swizzle-status <% if swizzleData[:isDown] == 1%><%= 'swizzle-error' %><% else %><%= 'type-' + swizzleData[:type]%><% end %>'>
+			<li id='<% if swizzleData[:isDown]==0 %><%= swizzleData[:title].downcase.sub(':', '-') %><% else %><%= swizzleData[:title].split[0].downcase.sub(':', '-')  %><% end %>' class='swizzle-status type-<%= swizzleData[:type]%><% if swizzleData[:isDown] == 1%><%= ' swizzle-error' %><% end %>'>
 				<a href=<%=swizzleData[:link]%> target="_blank">
 					<div class='title'>
 						<h1><%= swizzleData[:title] %></h1>
