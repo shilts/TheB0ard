@@ -157,10 +157,10 @@ refreshSwizzleData = (extra) ->
                 scrollToSwizzle oldSwizzle.attr 'id', board
     error: ->
       console.log '     DANGER WILL ROBINSON: AJAX FAILURE'
+    console.log ''
 
 scrollToSwizzle = (name, $board) ->
   if $board.hasClass 'top-board'
-    console.log 'scrolling to ' + $('.top-board #'+name).position().left
     $board.animate
       'scrollLeft': $('.top-board #'+name).position().left - ($(window).width()/5)
       200
@@ -168,7 +168,6 @@ scrollToSwizzle = (name, $board) ->
       ->
         # $('.top-board #'+name).effect 'bounce', 'fast'
   else if $board.hasClass 'bottom-board'
-    console.log 'scrolling to ' + $('.bottom-board #'+name).position().left
     $board.animate
       'scrollLeft': $('.bottom-board #'+name).position().left -($(window).width()/5)
       200
@@ -176,7 +175,6 @@ scrollToSwizzle = (name, $board) ->
       ->
         # $('.bottom-board #'+name).effect 'bounce', 'fast'
   else
-    console.log 'scrolling to ' + $('#'+name).position().left
     $board.animate
       'scrollLeft': $('#'+name).position().left - ($(window).width()/3)
       200
@@ -218,7 +216,7 @@ $ =>
 
   activateSwizzleBoardEventHandlers(extraSwizzleWidth)
   setInterval ->
-    refreshSwizzleData extraSwizzleWidth
+    refreshSwizzleData(extraSwizzleWidth)
   , 15000
 
   $sideToggle.click ->
