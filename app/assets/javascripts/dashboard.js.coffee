@@ -155,9 +155,10 @@ refreshSwizzleData = (extra) ->
                 board = oldSwizzle.parent()
                 recalculateSwizzlesWidth extra
                 scrollToSwizzle oldSwizzle.attr 'id', board
+      console.log ''
     error: ->
       console.log '     DANGER WILL ROBINSON: AJAX FAILURE'
-    console.log ''
+      console.log ''
 
 scrollToSwizzle = (name, $board) ->
   if $board.hasClass 'top-board'
