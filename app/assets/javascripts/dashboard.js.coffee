@@ -73,9 +73,6 @@ displayModeOn = (extra) ->
   $mainBoard.toggle()
   $touch2s.remove()
   $railss.remove()
-  $('.top-board .commit-code').remove()
-  $('.bottom-board .commit-code').remove()
-  $('.display-mode .deployed-date p').css 'font-size' : ($(window).height() - 825) + 'pt'
   recalculateSwizzlesWidth extra
 
   $('.display-mode').each ->
@@ -121,44 +118,51 @@ refreshSwizzleData = (extra) ->
     type: 'GET'
     dataType: "json"
     url: './refresh_data'
+    newData = false;
     success: (data)->
       swizzles = $('.swizzle-status')
       for newSwizzle in data
-        if newSwizzle.isDown
-          newTitle = newSwizzle.title
+        newTitle = newSwizzle.title
+        newTitleToID = newTitle.substr(0, newTitle.indexOf(' ')).toLowerCase().replace(':','-')
+        if newSwizzle.isDown == 1
           downedSwizzle = newTitle.substr 0, newTitle.indexOf ' '
           oldSwizzles = $('h1:contains(' + downedSwizzle + ')').parent().parent().parent()
           oldSwizzles.each ->
-            if oldSwizzle.hasClass 'swizzle-error'
+            if $(this).hasClass 'swizzle-error'
               console.log '     ERROR: ' + downedSwizzle + ' is still not responding'
             else
-              oldSwizzle.addClass 'swizzle-error'
-              oldSwizzle.find('.title h1').text(newTitle)
+              $(this).addClass 'swizzle-error'
+              $(this).find('.title h1').text(newTitle)
               console.log '     ERROR: ' + downedSwizzle + ' is not responding'
-              board = oldSwizzle.parent()
+              board = $(this).parent()
               recalculateSwizzlesWidth extra
-              scrollToSwizzle oldSwizzle.attr 'id', board
+              scrollToSwizzle $(this).attr 'id', board
+              newData = true;
         else
-          for oldSwizzle in swizzles
-            oldSwizzle = $(oldSwizzle)
-            oldSwizzle.each ->
-              if (newSwizzle.date != oldSwizzle.find('.deployed-date p').text()) && (newSwizzle.title == oldSwizzle.find('.title h1').text())
+          for oldSwizzles in swizzles
+            oldSwizzles = $(oldSwizzles)
+            oldSwizzles.each ->
+              if (newSwizzle.commitCode != $(this).find('.commit-code p').text()) && (newSwizzle.newTitleToID == $(this).attr 'id')
+                if $(this).hasClass 'swizzle-error'
+                  $(this).removeClass 'swizzle-error'
                 console.log '     Updating ' + newSwizzle.title + '...'
-                oldSwizzle.find('.title h1').text(newSwizzle.title)
-                oldSwizzle.find('.deployed-date p').text(newSwizzle.date)
-                oldSwizzle.find('.deployer p').text(newSwizzle.deployer)
-                oldSwizzle.find('.commit-code p').text(newSwizzle.commitCode)
+                $(this).find('.title h1').text(newSwizzle.title)
+                $(this).find('.deployed-date p').text(newSwizzle.date)
+                $(this).find('.deployer p').text(newSwizzle.deployer)
+                $(this).find('.commit-code p').text(newSwizzle.commitCode)
                 newGitURL = "http://git.labs.sabre.com:88/?p=" + newSwizzle.type + ".git;a=commitdiff;h=" + newSwizzle.commitCode
-                oldSwizzle.find('.commit-code a').attr('href', newGitURL)
-                oldSwizzle.find('.branch h1').text(newSwizzle.branch)
+                $(this).find('.commit-code a').attr('href', newGitURL)
+                $(this).find('.branch h1').text(newSwizzle.branch)
                 console.log '       ' + newSwizzle.branch + ' has been deployed to ' + newSwizzle.title
-                board = oldSwizzle.parent()
+                board = $(this).parent()
                 recalculateSwizzlesWidth extra
-                scrollToSwizzle oldSwizzle.attr 'id', board
+                scrollToSwizzle $(this).attr 'id', board
+                newData = true;
       console.log ''
     error: ->
-      console.log '     DANGER WILL ROBINSON: AJAX FAILURE'
-      console.log ''
+      console.log "     DANGER WILL ROBINSON: AJAX FAILURE\n"
+    if !newData
+      console.log "     Nothing new to report, captain"
 
 scrollToSwizzle = (name, $board) ->
   if $board.hasClass 'top-board'
@@ -167,21 +171,21 @@ scrollToSwizzle = (name, $board) ->
       200
       'swing'
       ->
-        # $('.top-board #'+name).effect 'bounce', 'fast'
+        $('.top-board #'+name).effect 'bounce', 'fast'
   else if $board.hasClass 'bottom-board'
     $board.animate
       'scrollLeft': $('.bottom-board #'+name).position().left -($(window).width()/5)
       200
       'swing'
       ->
-        # $('.bottom-board #'+name).effect 'bounce', 'fast'
+        $('.bottom-board #'+name).effect 'bounce', 'fast'
   else
     $board.animate
       'scrollLeft': $('#'+name).position().left - ($(window).width()/3)
       200
       'swing'
       ->
-        # $('.swizzle-board #'+name).effect 'bounce', 'fast'
+        $('.swizzle-board #'+name).effect 'bounce', 'fast'
 
 #-----$(document).ready
 $ =>
@@ -233,7 +237,7 @@ $ =>
         width: (winWidth - sideClosedWidth) + 'px'
 
   $('.refresh').click ->
-    console.log "refreshin' teh swizzles..."
+    console.log "Refreshing Swizzle data..."
     refreshSwizzleData(extraSwizzleWidth)
 
   $('.edit-config').click ->

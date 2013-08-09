@@ -12,9 +12,9 @@ class DashboardController < ApplicationController
 			{:title => 'S4', :url => 'http://ctovm2418.dev.sabre.com/status', :link => 'http://ctovm2418.dev.sabre.com/login'},
 			{:title => 'S4', :url => 'http://ctovm2418.dev.sabre.com/touch2/status', :link => 'http://ctovm2418.dev.sabre.com/tdot'},
 			{:title => 'S5', :url => 'http://swizzle5.tripcase.com/status', :link => 'http://swizzle5.tripcase.com/login'},
-			{:title => 'S5', :url => 'http://swizzle5.tripcase.com/touch2/status', :link => 'http://swizzle5.tripcase.com/tdot'},
-			{:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com/status', :link => 'ltxl0208.sgdcelab.sabre.com/login'},
-			{:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com/touch2/status', :link => 'ltxl0208.sgdcelab.sabre.com/tdot'}
+			{:title => 'S5', :url => 'http://swizzle5.tripcase.com/touch2/status', :link => 'http://swizzle5.tripcase.com/tdot'}
+			# {:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com/status', :link => 'ltxl0208.sgdcelab.sabre.com/login'},
+			# {:title => 'S6', :url => 'ltxl0208.sgdcelab.sabre.com/touch2/status', :link => 'ltxl0208.sgdcelab.sabre.com/tdot'}
 		]
 
 		#hash contents: {:type, :title, :branch, :date, :deployer, :commitCode, :lastCommitTime, :link, :isDown}

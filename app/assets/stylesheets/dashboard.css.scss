@@ -455,6 +455,7 @@ body {
 								background: #000 $errorGradient;
 				 				background-size: $errorDimensions;
 								border-radius: 5px;
+								box-shadow: none;
 							}
 
 							.swizzle-data {
@@ -574,6 +575,10 @@ body {
 
 							.deployer p {
 								padding-top: 3px;
+							}
+
+							.commit-code {
+								display: none;
 							}
 
 							.branch {
