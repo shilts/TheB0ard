@@ -204,22 +204,22 @@ scrollToSwizzle = (name, $board) ->
 
 #---Wiggles the Swizzles
 updatedSwizzleAnimation = ($swizzle) ->
-        wiggleEffect $swizzle, 10
-        setTimeout ->
-          wiggleEffect($swizzle, -10)
-        , 100
-        setTimeout ->
-          wiggleEffect($swizzle, 7)
-        , 200
-        setTimeout ->
-          wiggleEffect($swizzle, -5)
-        , 300
-        setTimeout ->
-          wiggleEffect($swizzle, 3)
-        , 400
-        setTimeout ->
-          wiggleEffect($swizzle, 0)
-        , 500
+  wiggleEffect $swizzle, 10
+  setTimeout ->
+    wiggleEffect($swizzle, -10)
+  , 100
+  setTimeout ->
+    wiggleEffect($swizzle, 7)
+  , 200
+  setTimeout ->
+    wiggleEffect($swizzle, -5)
+  , 300
+  setTimeout ->
+    wiggleEffect($swizzle, 3)
+  , 400
+  setTimeout ->
+    wiggleEffect($swizzle, 0)
+  , 500
 
 #---Individual wiggle function
 wiggleEffect = ($swizzle, rot) ->
@@ -312,14 +312,14 @@ $ =>
 
   $('.self-destruct').click ->
     alert 'Why would you click that???'
-    $('body').remove();
+    $('body').remove()
     $('html').addClass 'desolation'
     $('html').append '<p>WELL, WHAT DID YOU EXPECT TO HAPPEN???!!1</p>'
 
     setInterval ->
-      x = Math.random(300) * 100;
-      y = Math.random(500) * 100;
-      p = Math.floor((Math.random()*3)+2);
+      x = Math.random(300) * 100
+      y = Math.random(500) * 100
+      p = Math.floor((Math.random()*3)+2)
       $('.desolation').css
         'background-size' : x + 'px ' + y + 'px'
         'padding' : p + '%'
