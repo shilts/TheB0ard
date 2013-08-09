@@ -14,7 +14,7 @@ resetMainDimensions = ($main, $side, openWidth, closedWidth, extra) ->
 
   $main.height(winHeight)
   $side.height(winHeight)
-  $('.panel-board').height(winHeight-$('.swizzle-board').height());
+  $('.panel-board').height(winHeight-$('.swizzle-board').height())
 
 #------Ensures all swizzles are displayed in a horizontal list
 recalculateSwizzlesWidth = (extra) ->
@@ -118,7 +118,7 @@ refreshSwizzleData = (extra) ->
     type: 'GET'
     dataType: "json"
     url: './refresh_data'
-    newData = false;
+    newData = false
     success: (data)->
       swizzles = $('.swizzle-status')
       for newSwizzle in data
@@ -137,12 +137,12 @@ refreshSwizzleData = (extra) ->
               board = $(this).parent()
               recalculateSwizzlesWidth extra
               scrollToSwizzle $(this).attr 'id', board
-              newData = true;
+              newData = true
         else
           for oldSwizzles in swizzles
             oldSwizzles = $(oldSwizzles)
             oldSwizzles.each ->
-              if (newSwizzle.commitCode != $(this).find('.commit-code p').text()) && (newSwizzle.newTitleToID == $(this).attr 'id')
+              if (newSwizzle.commitCode + 'ja;ldsf' != $(this).find('.commit-code p').text()) && (newSwizzle.newTitleToID == $(this).attr 'id')
                 if $(this).hasClass 'swizzle-error'
                   $(this).removeClass 'swizzle-error'
                 console.log '     Updating ' + newSwizzle.title + '...'
@@ -157,7 +157,7 @@ refreshSwizzleData = (extra) ->
                 board = $(this).parent()
                 recalculateSwizzlesWidth extra
                 scrollToSwizzle $(this).attr 'id', board
-                newData = true;
+                newData = true
       console.log ''
     error: ->
       console.log "     DANGER WILL ROBINSON: AJAX FAILURE\n"
