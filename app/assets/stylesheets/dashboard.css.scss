@@ -255,6 +255,22 @@ input::-webkit-inner-spin-button {
 html {
 	width: 100%;
 	height: 100%;
+
+	&.desolation {
+		width: inherit;
+		height: inherit;
+		background: $errorGradient;
+		background-size: $errorDimensions;
+		text-align: center;
+
+		p {
+		      position: relative;
+	      	padding: 17%;
+		      color: white;
+		      font-size: 70pt;
+		      text-shadow: #000 0px -1px 0px;
+		}
+	}
 }
 
 body {
@@ -444,6 +460,8 @@ body {
 						border-radius: 5px;
 						font-family: 'Pro-font Windows', 'sans-serif';
 						font-size: 23pt;
+						-webkit-transition: -webkit-transform 100ms;
+						transition: -webkit-transform 100ms;
 
 					 	&.swizzle-error {
 					 		margin-top: 3%;

@@ -25,7 +25,7 @@ class DashboardController < ApplicationController
 		respond_to do |format|
 			format.html
 			format.json {
-				@swizzleHTMLHashArray = []
+				@swizzleHTMLHashArray.clear
 				fetch_swizzle_data(swizzleURLHashArray, @swizzleHTMLHashArray)
 				render :json => @swizzleHTMLHashArray
 			}

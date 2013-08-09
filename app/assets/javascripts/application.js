@@ -13,5 +13,5 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.draggable
-//= require jquery.ui.effect
+//= require jquery.ui.effect-bounce
 //= require_tree .

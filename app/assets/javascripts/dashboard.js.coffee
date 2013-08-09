@@ -74,6 +74,8 @@ displayModeOn = (extra) ->
   $touch2s.remove()
   $railss.remove()
   recalculateSwizzlesWidth extra
+  $('.speed-indicator').val(3)
+  setSwizzleScrollSpeed $('.speed-indicator')
 
   $('.display-mode').each ->
     $(this).scrollLeft(100)
@@ -86,6 +88,8 @@ displayModeOff = (start, extra) ->
   $('.display-mode').remove()
   $('.swizzle-board').toggle().scrollLeft(start)
   recalculateSwizzlesWidth extra
+  $('.speed-indicator').val(1)
+  setSwizzleScrollSpeed $('.speed-indicator')
 
 activateSwizzleBoardEventHandlers = (extra) ->
   $('.swizzle-board').each ->
@@ -113,18 +117,20 @@ setSwizzleScrollSpeed = ($indicator) ->
     '-webkit-marquee-increment' : newSpeed + 'px'
   $indicator.val newSpeed
 
+#---Updates the swizzle data
 refreshSwizzleData = (extra) ->
   $.ajax
     type: 'GET'
     dataType: "json"
     url: './refresh_data'
-    newData = false
     success: (data)->
+      newData = false
       swizzles = $('.swizzle-status')
       for newSwizzle in data
         newTitle = newSwizzle.title
-        newTitleToID = newTitle.substr(0, newTitle.indexOf(' ')).toLowerCase().replace(':','-')
+        newSwizzleTitleToID = newTitle.toLowerCase().replace(':','-')
         if newSwizzle.isDown == 1
+          newSwizzleTitleToID = newTitle.toLowerCase().replace(':','-').substr(0, newTitle.indexOf(' '))
           downedSwizzle = newTitle.substr 0, newTitle.indexOf ' '
           oldSwizzles = $('h1:contains(' + downedSwizzle + ')').parent().parent().parent()
           oldSwizzles.each ->
@@ -134,7 +140,7 @@ refreshSwizzleData = (extra) ->
               $(this).addClass 'swizzle-error'
               $(this).find('.title h1').text(newTitle)
               console.log '     ERROR: ' + downedSwizzle + ' is not responding'
-              board = $(this).parent()
+              board = $(this).parent().parent()
               recalculateSwizzlesWidth extra
               scrollToSwizzle $(this).attr 'id', board
               newData = true
@@ -142,7 +148,7 @@ refreshSwizzleData = (extra) ->
           for oldSwizzles in swizzles
             oldSwizzles = $(oldSwizzles)
             oldSwizzles.each ->
-              if (newSwizzle.commitCode + 'ja;ldsf' != $(this).find('.commit-code p').text()) && (newSwizzle.newTitleToID == $(this).attr 'id')
+              if (newSwizzle.commitCode != $(this).find('.commit-code p').text()) && (newSwizzleTitleToID == $(this).attr 'id')
                 if $(this).hasClass 'swizzle-error'
                   $(this).removeClass 'swizzle-error'
                 console.log '     Updating ' + newSwizzle.title + '...'
@@ -153,39 +159,75 @@ refreshSwizzleData = (extra) ->
                 newGitURL = "http://git.labs.sabre.com:88/?p=" + newSwizzle.type + ".git;a=commitdiff;h=" + newSwizzle.commitCode
                 $(this).find('.commit-code a').attr('href', newGitURL)
                 $(this).find('.branch h1').text(newSwizzle.branch)
+
                 console.log '       ' + newSwizzle.branch + ' has been deployed to ' + newSwizzle.title
-                board = $(this).parent()
+                board = $(this).parent().parent()
                 recalculateSwizzlesWidth extra
-                scrollToSwizzle $(this).attr 'id', board
+                scrollToSwizzle $(this).attr('id'), board
                 newData = true
-      console.log ''
+      if !newData
+        console.log "     Nothing new to report, captain"
+      else
+        console.log ''
     error: ->
       console.log "     DANGER WILL ROBINSON: AJAX FAILURE\n"
-    if !newData
-      console.log "     Nothing new to report, captain"
 
+#---Scrolls to any updated swizzle and triggers the wiggle animation
 scrollToSwizzle = (name, $board) ->
+  winWidth = $(window).width()
+  console.log $board
   if $board.hasClass 'top-board'
+    $swizzle = $('.top-board #'+name)
     $board.animate
-      'scrollLeft': $('.top-board #'+name).position().left - ($(window).width()/5)
+      'scrollLeft': $swizzle.position().left - (winWidth/5)
       200
       'swing'
       ->
-        $('.top-board #'+name).effect 'bounce', 'fast'
+        updatedSwizzleAnimation $swizzle
   else if $board.hasClass 'bottom-board'
+    $swizzle = $('.bottom-board #'+name)
     $board.animate
-      'scrollLeft': $('.bottom-board #'+name).position().left -($(window).width()/5)
+      'scrollLeft': $swizzle.position().left - (winWidth/5)
       200
       'swing'
       ->
-        $('.bottom-board #'+name).effect 'bounce', 'fast'
+        updatedSwizzleAnimation $swizzle
   else
+    $swizzle = $('#'+name)
+    console.log $swizzle.position()
     $board.animate
-      'scrollLeft': $('#'+name).position().left - ($(window).width()/3)
+      'scrollLeft': $swizzle.position().left - (winWidth/3)
       200
       'swing'
       ->
-        $('.swizzle-board #'+name).effect 'bounce', 'fast'
+        updatedSwizzleAnimation $swizzle
+
+#---Wiggles the Swizzles
+updatedSwizzleAnimation = ($swizzle) ->
+        wiggleEffect $swizzle, 10
+        setTimeout ->
+          wiggleEffect($swizzle, -10)
+        , 100
+        setTimeout ->
+          wiggleEffect($swizzle, 7)
+        , 200
+        setTimeout ->
+          wiggleEffect($swizzle, -5)
+        , 300
+        setTimeout ->
+          wiggleEffect($swizzle, 3)
+        , 400
+        setTimeout ->
+          wiggleEffect($swizzle, 0)
+        , 500
+
+#---Individual wiggle function
+wiggleEffect = ($swizzle, rot) ->
+  $swizzle.css
+    '-webkit-transform-origin': '50% 50%'
+    "-webkit-transform": 'rotate(' + rot + 'deg)'
+    'transform-origin': '50% 50%'
+    'transform': 'rotate(' + rot + 'deg)'
 
 #-----$(document).ready
 $ =>
@@ -210,21 +252,26 @@ $ =>
   extraSwizzleWidth = 15
   startingScroll = ($swizzles.first().outerWidth(true) + (extraSwizzleWidth*2))/2
 
+  # Initial swizzle board setup
   recalculateSwizzlesWidth extraSwizzleWidth
   $swizzleBoard.scrollLeft(startingScroll)
 
+  # Initial main wrapper and panel board setup
   $main.width $(window).width() - sideClosedWidth
   $panelBoard.height $(window).height()-$swizzleBoard.height()
 
+  # Fix dimensions on window resize
   $(window).resize ->
     resetMainDimensions $main, $side, sideOpenWidth, sideClosedWidth
 
   activateSwizzleBoardEventHandlers(extraSwizzleWidth)
 
+  # Refresh the Swizzle Data every 10 seconds
   setInterval ->
     refreshSwizzleData(extraSwizzleWidth)
-  , 15000
+  , 10000
 
+  # Controlls the animations for opening the side board when the toggle button is clicked
   $sideToggle.click ->
     winWidth = $(window).width()
     if $side.hasClass 'menu-closed'
@@ -236,10 +283,12 @@ $ =>
       $main.css
         width: (winWidth - sideClosedWidth) + 'px'
 
+  # Refreshes the SwizzleData on demand
   $('.refresh').click ->
     console.log "Refreshing Swizzle data..."
     refreshSwizzleData(extraSwizzleWidth)
 
+  # Will eventually open the swizzle edit page to CRUD swizzles
   $('.edit-config').click ->
 
   $displayToggle.click ->
@@ -263,6 +312,18 @@ $ =>
 
   $('.self-destruct').click ->
     alert 'Why would you click that???'
+    $('body').remove();
+    $('html').addClass 'desolation'
+    $('html').append '<p>WELL, WHAT DID YOU EXPECT TO HAPPEN???!!1</p>'
+
+    setInterval ->
+      x = Math.random(300) * 100;
+      y = Math.random(500) * 100;
+      p = Math.floor((Math.random()*3)+2);
+      $('.desolation').css
+        'background-size' : x + 'px ' + y + 'px'
+        'padding' : p + '%'
+    1
 
   $('.panel').each ->
     $handle = $(this).find('.panel-header')
